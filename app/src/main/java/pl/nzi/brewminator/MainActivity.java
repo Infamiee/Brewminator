@@ -6,18 +6,17 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
-    AnimationDrawable animationDrawable;
-    private static int SPLASH_SCREEN_OUT=2750;
+    private static int SPLASH_SCREEN_OUT=1000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView4);
-        animationDrawable = (AnimationDrawable) imageView.getDrawable();
-        animationDrawable.start();
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
