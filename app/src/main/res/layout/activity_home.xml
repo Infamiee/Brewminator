@@ -37,7 +37,7 @@
                 android:layout_below="@+id/inprogresstext"
                 android:layout_marginTop="10dp"
                 android:background="#FBFBEF"
-                android:text="potential active brew 1" />
+                android:text="ABV Calculator" />
 
             <Button
                 android:id="@+id/butt2"
