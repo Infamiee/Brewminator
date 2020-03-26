@@ -18,6 +18,7 @@ public class AbvCalculatorActivity extends AppCompatActivity {
     Button calculate;
     AbvCalculator abvCalculator = new AbvCalculator();
     TextView result;
+    Button back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class AbvCalculatorActivity extends AppCompatActivity {
         fg = (TextView) findViewById(R.id.fg);
         calculate = (Button) findViewById(R.id.calculate);
         result = (TextView) findViewById(R.id.result);
+        back = (Button) findViewById(R.id.back_arrow);
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +43,13 @@ public class AbvCalculatorActivity extends AppCompatActivity {
                 }
 
 
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
