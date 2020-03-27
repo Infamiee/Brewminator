@@ -27,10 +27,17 @@ public class IbuCalculatorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_calculator);
 
-        result = findViewById(R.id.iburesult);
-        calculate = findViewById(R.id.ibucalculatorbutton);
+        weights = new ArrayList<>();
+        acids = new ArrayList<>();
+        times = new ArrayList<>();
 
+        result = findViewById(R.id.iburesult);
+
+        calculate = findViewById(R.id.ibucalculatorbutton);
         calculate.setOnClickListener(this::calculate);
+
+        batchSizeEditText = findViewById(R.id.batchvolvalue);
+        originalGravityEditText = findViewById(R.id.origgravityvalue);
 
         weights.add(findViewById(R.id.weight1));
         weights.add(findViewById(R.id.weight2));
@@ -61,6 +68,7 @@ public class IbuCalculatorActivity extends AppCompatActivity {
 
                 hops.add(new Hop(weight,acid,time));
             }catch (NumberFormatException e){
+
                 continue;
             }
         }
@@ -75,6 +83,7 @@ public class IbuCalculatorActivity extends AppCompatActivity {
             IbuCalculator ibuCalculator = new IbuCalculator(getHopList(),batchSize,originalGravity);
             result.setText(String.format("%.3f",ibuCalculator.calculate()));
         }catch (Exception e){
+            e.printStackTrace();
             result.setText("Someting went wrong");
         }
     }
