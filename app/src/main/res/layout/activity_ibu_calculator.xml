@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IbuCalculatorActivity">
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:id="@+id/iburesult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:text="Total IBU:*wynik*"/>
+
+            <TextView
+                android:id="@+id/batchvol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iburesult"
+                android:layout_marginTop="40dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Final batch volume:"/>
+
+            <EditText
+                android:id="@+id/batchvolvalue"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iburesult"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="40dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <TextView
+                android:id="@+id/origgravity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/batchvol"
+                android:layout_marginTop="20dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Original gravity:"/>
+
+            <EditText
+                android:id="@+id/origgravityvalue"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/batchvolvalue"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <TextView
+                android:id="@+id/hopslist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/origgravity"
+                android:layout_marginTop="25dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Hops specs:"/>
+
+
+            <TextView
+                android:id="@+id/hopsweight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopslist"
+                android:layout_marginTop="25dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Grams:"/>
+
+            <TextView
+                android:id="@+id/hopsacid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopslist"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Alpha acid %:"/>
+
+            <TextView
+                android:id="@+id/hopstime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopslist"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="25dp"
+                android:fontFamily="serif"
+                android:textColor="#000000"
+                android:textSize="16dp"
+                android:text="Boil time:"/>
+
+            <EditText
+                android:id="@+id/weight1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopsweight"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/weight2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weight1"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/weight3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weight2"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/weight4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weight3"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/weight5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weight4"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/acid1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopsacid"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/acid2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acid1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/acid3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acid2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/acid4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acid3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/acid5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acid4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/time1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hopstime"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/time2"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time1"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+            <EditText
+                android:id="@+id/time3"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time2"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/time4"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time3"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <EditText
+                android:id="@+id/time5"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time4"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:background="#ffffff"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/time5"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"
+                android:text="OK"
+                />
+
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,7 +22,7 @@ public class IbuCalculatorTest {
         hops.add(new Hop(1.5,6.4,45));
         hops.add(new Hop(1,5,15));
 
-        IbuCalculator ibuCalculator = new IbuCalculator(hops, 5, 1.050, false);
+        IbuCalculator ibuCalculator = new IbuCalculator(hops, 5, 1.050);
 
 
         assertEquals(44.67 ,ibuCalculator.calculate(),0.5);
