@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".AbvCalculatorActivity" />
+        <activity android:name=".IbuCalculatorActivity" />
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".MainActivity"

@@ -18,6 +18,7 @@ import pl.nzi.brewminator.calculator.AbvCalculator;
 
 public class HomeActivity extends AppCompatActivity {
     Button button;
+    Button button1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +31,15 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, AbvCalculatorActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        button1 = (Button) findViewById(R.id.butt2);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, IbuCalculatorActivity.class);
                 startActivity(intent);
 
             }
