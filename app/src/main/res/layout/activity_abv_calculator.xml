@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FCF1CC"
     tools:context=".AbvCalculatorActivity">
-    <include android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+
     <ScrollView
 
         android:layout_width="match_parent"

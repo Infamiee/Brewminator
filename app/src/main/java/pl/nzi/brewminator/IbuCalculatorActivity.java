@@ -20,13 +20,21 @@ import pl.nzi.brewminator.model.HOP;
 public class IbuCalculatorActivity extends AppCompatActivity {
 
     private List<EditText> weights,acids,times;
-    Button calculate;
+    private Button calculate,back;
     private TextView result;
     private EditText batchSizeEditText,originalGravityEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_calculator);
+
+        back = findViewById(R.id.backfromibu);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         weights = new ArrayList<>();
         acids = new ArrayList<>();
