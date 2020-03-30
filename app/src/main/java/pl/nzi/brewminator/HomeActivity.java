@@ -31,14 +31,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setLogo(R.drawable.cropped_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
         button = (Button) findViewById(R.id.butt1);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, AbvCalculatorActivity.class);
             startActivity(intent);
 
         });
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         button1 = (Button) findViewById(R.id.butt2);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,22 +50,14 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("xd2");
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        System.out.println("xd1");
-        if (item.getItemId() == R.id.search_button){
-            System.out.println("xd");
-            Toast.makeText(getApplicationContext(),"xddddd",Toast.LENGTH_LONG).show();
-        }
-
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }
