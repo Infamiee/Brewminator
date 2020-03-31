@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/ibucalculatornav" android:title="@string/ibucalculator" android:icon="@drawable/calculator"/>
+    <item android:id="@+id/abvcalculatornav" android:title="@string/abv_calculator" android:icon="@drawable/calculator"/>
+
+</menu>

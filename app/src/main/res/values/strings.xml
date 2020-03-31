@@ -17,5 +17,12 @@
 
     <string name="home_second">Home Second</string>
     <string name="search">Search</string>
+    <string name="ibucalculator">IBU Calculator</string>
+    <string name="home">Home</string>
+    <string name="abv_calculator">ABV Calculator</string>
+    <string name="in_progress">In progress:</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
 </resources>

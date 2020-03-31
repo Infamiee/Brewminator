@@ -4,27 +4,9 @@
     android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:theme="@style/ToolbarColoredBackArrow"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:id="@+id/toolbar"
-    app:navigationIcon="@drawable/ic_menu_black"
-    >
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src= "@drawable/cropped_logo"
-        android:scaleType="centerCrop"
-        android:maxWidth="200dp"
-        android:layout_marginHorizontal="30dp"
-        android:adjustViewBounds="true"/>
-
-
-</LinearLayout>
+    android:id="@+id/toolbar">
 
 
 

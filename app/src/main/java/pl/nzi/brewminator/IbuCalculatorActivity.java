@@ -1,13 +1,17 @@
 package pl.nzi.brewminator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.os.HardwarePropertiesManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -20,21 +24,20 @@ import pl.nzi.brewminator.model.HOP;
 public class IbuCalculatorActivity extends AppCompatActivity {
 
     private List<EditText> weights,acids,times;
-    private Button calculate,back;
+    private Button calculate;
     private TextView result;
     private EditText batchSizeEditText,originalGravityEditText;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_calculator);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setIcon(R.drawable.cropped_logo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        back = findViewById(R.id.backfromibu);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         weights = new ArrayList<>();
         acids = new ArrayList<>();
@@ -96,6 +99,23 @@ public class IbuCalculatorActivity extends AppCompatActivity {
             e.printStackTrace();
             result.setText("Someting went wrong");
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

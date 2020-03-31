@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FCF1CC"
     tools:context=".AbvCalculatorActivity">
-
+    <include layout="@layout/toolbar"/>
     <ScrollView
 
         android:layout_width="match_parent"
@@ -15,22 +15,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/back_arrow"
-                android:layout_width="41dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="70dp"
-                android:background="@android:color/transparent"
-                android:drawableTop="@drawable/ic_arrow_back_black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/result"
