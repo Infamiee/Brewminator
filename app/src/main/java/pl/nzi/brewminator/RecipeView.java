@@ -24,8 +24,6 @@ public class RecipeView extends AppCompatActivity {
 
         int id = intent.getIntExtra("id",-1);
 
-
-
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://192.168.1.18:5000/recipe?id="+String.valueOf(id);
 
