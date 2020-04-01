@@ -10,6 +10,7 @@ public class AbvCalculatorTest {
     AbvCalculator calculator = new AbvCalculator();
     @Test
     public void should_calculate() throws WrongGravitiesException {
+
         assertEquals(calculator.calculate(1.050,1.010),5.25,0.05);
         assertEquals(calculator.calculate(1.086,1.010),9.98,0.05);
         assertEquals(calculator.calculate(1.076,1.075),0.13,0.05);
