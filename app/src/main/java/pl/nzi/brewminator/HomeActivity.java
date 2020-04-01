@@ -20,9 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.google.android.material.navigation.NavigationView;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import java.util.List;
+import java.util.Objects;
 
 import pl.nzi.brewminator.service.RecipesJobService;
 
@@ -32,20 +37,20 @@ public class HomeActivity extends AppCompatActivity {
     Button button1;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        scheduleJob(getCurrentFocus());
         drawerLayout = findViewById(R.id.main_activity);
         toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setIcon(R.drawable.cropped_logo);
 
@@ -55,27 +60,16 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
+
+
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
 
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search_button));
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        assert searchManager != null;
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
         return true;
     }
 
@@ -83,6 +77,11 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        if (item.getItemId()==R.id.search_button){
+            Intent intent = new Intent(this,SearchActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -104,34 +103,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 drawerLayout.closeDrawers();
                 return true;
+
         }
         return false;
     }
 
-    public void scheduleJob(View v){
-        ComponentName componentName = new ComponentName(this, RecipesJobService.class);
-        JobInfo jobInfo = new JobInfo.Builder(1,componentName)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setPeriodic(30*60*1000)
-                .setPersisted(true)
-                .setMinimumLatency(0)
-                .build();
-
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        int result = jobScheduler.schedule(jobInfo);
-
-        if (result == JobScheduler.RESULT_SUCCESS){
-            Log.d("Scheduler","job scheduled");
-        }else {
-            Log.d("Scheduler","job failed");
-        }
-    }
 
 
-    public void cancelJob(View view){
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        jobScheduler.cancel(1);
-        Log.d("Scheduler","job cancelled");
-
-    }
 }

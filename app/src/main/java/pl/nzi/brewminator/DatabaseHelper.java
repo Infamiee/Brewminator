@@ -1,5 +1,6 @@
 package pl.nzi.brewminator;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -83,13 +84,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             try {
                 String value = (String) jsonObject.get(key);
                 addData(Integer.parseInt(key),value);
+                Log.d(TAG, "saveAllFromJson: "+key+" "+value);
             } catch (Exception e) {
                 Log.d(TAG,"exception " + e.getMessage());
             }
 
         }
 
+    }
 
-
+    public int getIdByName(String name){
+        SQLiteDatabase db = getWritableDatabase();
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery("SELECT "+ID+" FROM " +TABLE_NAME+ " WHERE " +RECIPE_NAME+ "= '"+name+"'",null);
+        return  cursor.getInt(cursor.getColumnIndex(ID));
     }
 }

@@ -14,13 +14,16 @@ import pl.nzi.brewminator.model.Recipe;
 
 public class RecipeView extends AppCompatActivity {
     private Recipe recipe;
+    DatabaseHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
 
         Intent intent = getIntent();
-        int id = intent.getIntExtra("id",0);
+
+        int id = intent.getIntExtra("id",-1);
+
 
 
         RequestQueue queue = Volley.newRequestQueue(this);
