@@ -3,6 +3,7 @@ package pl.nzi.brewminator;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.HardwarePropertiesManager;
 import android.view.Menu;
@@ -113,6 +114,11 @@ public class IbuCalculatorActivity extends AppCompatActivity {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
             finish();
+        }
+        if (item.getItemId()==R.id.search_button){
+            Intent intent = new Intent(this,SearchActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
