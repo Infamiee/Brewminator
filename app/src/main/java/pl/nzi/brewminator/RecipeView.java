@@ -10,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import pl.nzi.brewminator.model.Recipe;
+
 public class RecipeView extends AppCompatActivity {
     private Recipe recipe;
     @Override

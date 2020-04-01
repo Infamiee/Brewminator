@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 
 import com.google.android.material.navigation.NavigationView;
@@ -29,6 +30,8 @@ import pl.nzi.brewminator.service.RecipesJobService;
 public class HomeActivity extends AppCompatActivity {
     Button button;
     Button button1;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle toggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

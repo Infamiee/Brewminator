@@ -34,9 +34,9 @@ public class IbuCalculatorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ibu_calculator);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setIcon(R.drawable.cropped_logo);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.cropped_logo);
 
 
         weights = new ArrayList<>();
