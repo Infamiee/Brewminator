@@ -68,7 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return getAllData();
         }
         SQLiteDatabase db = getWritableDatabase();
-        String sql = "SELECT * FROM "+TABLE_NAME+" WHERE RecipeName LIKE '"+word+"%'";
+        String sql = "SELECT * FROM "+TABLE_NAME+" WHERE RecipeName LIKE '%"+word+"%'";
         return db.rawQuery(sql,null);
 
     }
