@@ -5,8 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+
+import org.json.simple.JSONObject;
+
+import java.util.Iterator;
+import java.util.Set;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
@@ -55,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor get_Recipes_by_keyword(String keyword){
+    public Cursor getRecipesByKeyword(String keyword){
         String word = keyword.trim().toLowerCase();
         if (word.isEmpty()){
             return getAllData();
@@ -63,6 +70,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String sql = "SELECT * FROM "+TABLE_NAME+" WHERE RecipeName LIKE '"+word+"%'";
         return db.rawQuery(sql,null);
+
+    }
+
+    public void saveAllFromJson(JSONObject jsonObject){
+        Set<String> keys = jsonObject.keySet();
+
+        onUpgrade(getWritableDatabase(),1,2);
+
+        for (String key:keys){
+
+            try {
+                String value = (String) jsonObject.get(key);
+                addData(Integer.parseInt(key),value);
+            } catch (Exception e) {
+                Log.d(TAG,"exception " + e.getMessage());
+            }
+
+        }
+
+
 
     }
 }

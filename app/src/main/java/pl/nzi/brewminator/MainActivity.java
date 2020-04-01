@@ -2,12 +2,19 @@ package pl.nzi.brewminator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+
+import pl.nzi.brewminator.service.RecipesJobService;
 
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN_OUT=1000;
@@ -27,4 +34,6 @@ public class MainActivity extends AppCompatActivity {
         },SPLASH_SCREEN_OUT);
 
     }
+
+
 }

@@ -10,14 +10,20 @@ import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.SearchManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
 
 
 import com.google.android.material.navigation.NavigationView;
+
+import pl.nzi.brewminator.service.RecipesJobService;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -29,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        scheduleJob(getCurrentFocus());
         drawerLayout = findViewById(R.id.main_activity);
         toggle = new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -96,5 +103,32 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    public void scheduleJob(View v){
+        ComponentName componentName = new ComponentName(this, RecipesJobService.class);
+        JobInfo jobInfo = new JobInfo.Builder(1,componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPeriodic(30*60*1000)
+                .setPersisted(true)
+                .setMinimumLatency(0)
+                .build();
+
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        int result = jobScheduler.schedule(jobInfo);
+
+        if (result == JobScheduler.RESULT_SUCCESS){
+            Log.d("Scheduler","job scheduled");
+        }else {
+            Log.d("Scheduler","job failed");
+        }
+    }
+
+
+    public void cancelJob(View view){
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.cancel(1);
+        Log.d("Scheduler","job cancelled");
+
     }
 }

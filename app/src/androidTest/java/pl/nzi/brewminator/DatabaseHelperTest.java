@@ -5,6 +5,13 @@ import android.database.Cursor;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +38,8 @@ public class DatabaseHelperTest {
 
     @After
     public void closeDb() throws IOException {
-
         db.close();
+        db.onUpgrade(db.getWritableDatabase(),1,2);
     }
 
 
@@ -72,7 +79,7 @@ public class DatabaseHelperTest {
     }
 
     @Test
-    public void get_Recipes_by_keyword() {
+    public void getRecipesByKeyword() {
         String name1 = "First Recipe";
         String name2 = "First Recipe 1";
         String name3 = "Third Recipe";
@@ -83,7 +90,7 @@ public class DatabaseHelperTest {
 
         String keyword = "fir";
 
-        Cursor cursor = db.get_Recipes_by_keyword(keyword);
+        Cursor cursor = db.getRecipesByKeyword(keyword);
         List<String> names = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             names.add(cursor.getString(cursor.getColumnIndex("RecipeName")));
@@ -96,7 +103,7 @@ public class DatabaseHelperTest {
 
         keyword = "THIR";
 
-        cursor = db.get_Recipes_by_keyword(keyword);
+        cursor = db.getRecipesByKeyword(keyword);
         names = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             names.add(cursor.getString(cursor.getColumnIndex("RecipeName")));
@@ -108,7 +115,7 @@ public class DatabaseHelperTest {
 
         keyword = "dfgsgsdagafds";
 
-        cursor = db.get_Recipes_by_keyword(keyword);
+        cursor = db.getRecipesByKeyword(keyword);
         names = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             names.add(cursor.getString(cursor.getColumnIndex("RecipeName")));
@@ -117,6 +124,24 @@ public class DatabaseHelperTest {
         //Test if none returned if not keyword doesn't match
         assertEquals(names.size(),0);
 
+    }
+
+    @Test
+    public void saveAllFromJson() throws ParseException {
+        String json = "{\"1\":\"Citra SMaSH\",\"2\":\"Corona Clone?\",\"3\":\"Guinness Clone\",\"4\":\"Hazy Juicy IPA\",\"5\":\"Hopfenweisse\",\"6\":\"NEIPA\",\"7\":\"Nutella Stout\",\"8\":\"west coast ipa\"}";
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(json);
+        db.saveAllFromJson(jsonObject);
+
+        Cursor cursor = db.getAllData();
+
+        List<String> names = new ArrayList<>();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            names.add(cursor.getString(cursor.getColumnIndex("RecipeName")));
+        }
+
+        assertEquals(names.size(),8);
+        assertEquals(names.get(0),"Citra SMaSH");
 
 
 
