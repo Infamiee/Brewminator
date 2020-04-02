@@ -46,11 +46,11 @@ public class DatabaseHelperTest {
     @Test
     public void addData() {
         //Test if adding
-        assertTrue(db.addData(1, "First Recipe"));
+        assertTrue(db.addData(1, "First Recipe","Style"));
         //Test if not adding empty name
-        assertFalse(db.addData(2,""));
+        assertFalse(db.addData(2,"","Style"));
         //Test if not adding repeating id
-        assertFalse(db.addData(1,"Second"));
+        assertFalse(db.addData(1,"Second","Style"));
     }
 
     @Test
@@ -59,9 +59,9 @@ public class DatabaseHelperTest {
         String name2 = "Second Recipe";
         String name3 = "Third Recipe";
 
-        db.addData(1, name1);
-        db.addData(2, name2);
-        db.addData(3, name3);
+        db.addData(1, name1,"Style");
+        db.addData(2, name2,"Style");
+        db.addData(3, name3,"Style");
         Cursor cursor = db.getAllData();
 
         List<String> names = new ArrayList<>();
@@ -84,9 +84,9 @@ public class DatabaseHelperTest {
         String name2 = "First Recipe 1";
         String name3 = "Third Recipe";
 
-        db.addData(1, name1);
-        db.addData(2, name2);
-        db.addData(3, name3);
+        db.addData(1, name1,"Style");
+        db.addData(2, name2,"Style");
+        db.addData(3, name3,"Style");
 
         String keyword = "fir";
 

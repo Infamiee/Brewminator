@@ -11,6 +11,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 
+import com.google.gson.internal.LinkedTreeMap;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Iterator;
@@ -21,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "Recipes";
     private static final String ID = "RecipeId";
     private static final String RECIPE_NAME = "RecipeName";
+    private static final String STYLE = "Style";
 
     public DatabaseHelper(@Nullable Context context ) {
         super(context, TABLE_NAME, null,1);
@@ -29,7 +33,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY NOT NULL," +
-                "                                   %s TEXT NOT NULL )",TABLE_NAME,ID,RECIPE_NAME);
+                "                                   %s TEXT NOT NULL," +
+                "                                   %s TEXT NOT NULL )",TABLE_NAME,ID,RECIPE_NAME,STYLE);
                 db.execSQL(sql);
     }
 
@@ -40,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean addData(int id, String name){
+    public boolean addData(int id, String name,String style){
         if (name.isEmpty()){
             return false;
         }
@@ -48,6 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ID,id);
         values.put(RECIPE_NAME,name);
+        values.put(STYLE,style);
         long result = db.insert(TABLE_NAME,null,values);
 
         if (result == -1 ){
@@ -80,12 +86,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onUpgrade(getWritableDatabase(),1,2);
 
         for (String key:keys){
-
             try {
-                String value = (String) jsonObject.get(key);
-                addData(Integer.parseInt(key),value);
-                Log.d(TAG, "saveAllFromJson: "+key+" "+value);
+                LinkedTreeMap<String,String> value = (LinkedTreeMap<String, String>) jsonObject.get(key);
+                String name = (String) value.get("name");
+                String style = (String) value.get("style");
+
+                addData(Integer.parseInt(key),name,style);
+                Log.d(TAG, "saveAllFromJson: "+key+" "+name+" "+style);
             } catch (Exception e) {
+                e.printStackTrace();
                 Log.d(TAG,"exception " + e.getMessage());
             }
 

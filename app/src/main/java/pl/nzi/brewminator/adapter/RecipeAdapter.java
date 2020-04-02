@@ -27,8 +27,8 @@ import pl.nzi.brewminator.model.RecipeSearch;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> implements Filterable {
     private List<RecipeSearch> recipeList;
     private List<RecipeSearch> recipeListFull;
-    DatabaseHelper db;
-    OnClickRecipeListener onClickRecipeListener;
+    private DatabaseHelper db;
+    private OnClickRecipeListener onClickRecipeListener;
 
     public RecipeAdapter(List<RecipeSearch> exampleList,OnClickRecipeListener onClickRecipeListener) {
         this.recipeList = exampleList;
@@ -44,10 +44,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         OnClickRecipeListener onClickRecipeListener;
-        TextView textView;
+        TextView name;
+        TextView style;
         RecipeViewHolder(View itemView,OnClickRecipeListener onClickRecipeListener) {
             super(itemView);
-            textView = itemView.findViewById(R.id.recipe_name_textview);
+            name = itemView.findViewById(R.id.textView);
+            style = itemView.findViewById(R.id.textView2);
             this.onClickRecipeListener = onClickRecipeListener;
             itemView.setOnClickListener(this);
         }
@@ -69,7 +71,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         String recipe = recipeList.get(position).getName();
-        holder.textView.setText(recipe);
+        String style = recipeList.get(position).getStyle();
+        holder.name.setText(recipe);
+        holder.style.setText(style);
     }
 
     @Override
@@ -95,7 +99,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                     String name = cursor.getString(cursor.getColumnIndex("RecipeName"));
                     int id = cursor.getInt(cursor.getColumnIndex("RecipeId"));
-                    RecipeSearch recipeSearch = new RecipeSearch(id,name);
+                    String style = cursor.getString(cursor.getColumnIndex("Style"));
+                    RecipeSearch recipeSearch = new RecipeSearch(id,name,style);
                     filteredList.add(recipeSearch);
                 }
             }

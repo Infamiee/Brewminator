@@ -78,7 +78,8 @@ public class SearchActivity extends AppCompatActivity implements RecipeAdapter.O
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex("RecipeName"));
             int id = cursor.getInt(cursor.getColumnIndex("RecipeId"));
-            recipeList.add(new RecipeSearch(id,name));
+            String style = cursor.getString(cursor.getColumnIndex("Style"));
+            recipeList.add(new RecipeSearch(id,name,style));
         }
         Collections.sort(recipeList);
         this.fullList = recipeList;
