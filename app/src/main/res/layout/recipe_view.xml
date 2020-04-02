@@ -18,7 +18,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:textColor="@android:color/black"
-                    android:text="Line1"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -26,7 +25,6 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Line2"
                     android:layout_below="@+id/textView"
                     android:layout_marginStart="8dp"
                     android:textSize="15sp"
