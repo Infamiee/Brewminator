@@ -50,6 +50,7 @@ public class RecipeView extends AppCompatActivity {
     private Recipe recipe;
     DatabaseHelper db;
     ImageButton brewButton;
+    Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +63,9 @@ public class RecipeView extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.cropped_logo);
 
         brewButton = findViewById(R.id.brew_button);
-        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Starting brewing", Toast.LENGTH_LONG).show());
-
+        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
+        saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show());
         Intent intent = getIntent();
 
         int id = intent.getIntExtra("id", -1);
@@ -265,7 +267,14 @@ public class RecipeView extends AppCompatActivity {
     }
 
     private void updateHops(){
-        List<HOP> hops = recipe.getHOPS().getHOP();
+        List<HOP> hops;
+        try {
+            hops = recipe.getHOPS().getHOP();
+
+        }catch (Exception e){
+            findViewById(R.id.hops_layout).setVisibility(View.GONE);
+            return;
+        }
 
         TableLayout tableLayout = findViewById(R.id.hops_table);
 
@@ -331,6 +340,7 @@ public class RecipeView extends AppCompatActivity {
             mashsteps = recipe.getMASH().getMASHSTEPS().getMASHSTEP();
 
         }catch (Exception e){
+            findViewById(R.id.mashguid_layout).setVisibility(View.GONE);
             return;
         }
 
@@ -381,8 +391,10 @@ public class RecipeView extends AppCompatActivity {
             miscs = recipe.getMISCS().getMISC();
 
         }catch (Exception e){
+            findViewById(R.id.misc_layout).setVisibility(View.GONE);
             return;
         }
+
 
         TableLayout tableLayout = findViewById(R.id.misc_table);
 

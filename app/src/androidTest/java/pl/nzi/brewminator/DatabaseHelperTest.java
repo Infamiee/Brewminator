@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -128,9 +129,95 @@ public class DatabaseHelperTest {
 
     @Test
     public void saveAllFromJson() throws ParseException {
-        String json = "{\"1\":\"Citra SMaSH\",\"2\":\"Corona Clone?\",\"3\":\"Guinness Clone\",\"4\":\"Hazy Juicy IPA\",\"5\":\"Hopfenweisse\",\"6\":\"NEIPA\",\"7\":\"Nutella Stout\",\"8\":\"west coast ipa\"}";
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(json);
+        String json = "{\n" +
+                "    \"1\": {\n" +
+                "        \"name\": \"Blonde Stout\",\n" +
+                "        \"style\": \"Experimental Beer\"\n" +
+                "    },\n" +
+                "    \"2\": {\n" +
+                "        \"name\": \"Brut IPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"3\": {\n" +
+                "        \"name\": \"Citra Pale Ale Recipe\",\n" +
+                "        \"style\": \"American Pale Ale\"\n" +
+                "    },\n" +
+                "    \"4\": {\n" +
+                "        \"name\": \"Citra SMaSH\",\n" +
+                "        \"style\": \"American Pale Ale\"\n" +
+                "    },\n" +
+                "    \"5\": {\n" +
+                "        \"name\": \"Classic German Pilsner\",\n" +
+                "        \"style\": \"German Pilsner (Pils)\"\n" +
+                "    },\n" +
+                "    \"6\": {\n" +
+                "        \"name\": \"Corona Clone?\",\n" +
+                "        \"style\": \"International Pale Lager\"\n" +
+                "    },\n" +
+                "    \"7\": {\n" +
+                "        \"name\": \"Guinness Clone\",\n" +
+                "        \"style\": \"Dry Stout\"\n" +
+                "    },\n" +
+                "    \"8\": {\n" +
+                "        \"name\": \"Hazy Juicy IPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"9\": {\n" +
+                "        \"name\": \"Hopfenweisse\",\n" +
+                "        \"style\": \"Weizen/Weissbier\"\n" +
+                "    },\n" +
+                "    \"10\": {\n" +
+                "        \"name\": \"Mexican Cerveza\",\n" +
+                "        \"style\": \"Light American Lager\"\n" +
+                "    },\n" +
+                "    \"11\": {\n" +
+                "        \"name\": \"NEIPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"12\": {\n" +
+                "        \"name\": \"Nutella Stout\",\n" +
+                "        \"style\": \"Sweet Stout\"\n" +
+                "    },\n" +
+                "    \"13\": {\n" +
+                "        \"name\": \"Old Rasputin Clone\",\n" +
+                "        \"style\": \"Russian Imperial Stout\"\n" +
+                "    },\n" +
+                "    \"14\": {\n" +
+                "        \"name\": \"Peach Wheat\",\n" +
+                "        \"style\": \"Fruit Beer\"\n" +
+                "    },\n" +
+                "    \"15\": {\n" +
+                "        \"name\": \"Pineapple IPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"16\": {\n" +
+                "        \"name\": \"Session IPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"17\": {\n" +
+                "        \"name\": \"Strawberry Vanilla Milkshake IPA\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"18\": {\n" +
+                "        \"name\": \"TH Haze Clone\",\n" +
+                "        \"style\": \"Imperial IPA\"\n" +
+                "    },\n" +
+                "    \"19\": {\n" +
+                "        \"name\": \"Traditional German Gose\",\n" +
+                "        \"style\": \"Gueuze\"\n" +
+                "    },\n" +
+                "    \"20\": {\n" +
+                "        \"name\": \"west coast ipa\",\n" +
+                "        \"style\": \"American IPA\"\n" +
+                "    },\n" +
+                "    \"21\": {\n" +
+                "        \"name\": \"White Stout\",\n" +
+                "        \"style\": \"Sweet Stout\"\n" +
+                "    }\n" +
+                "}";
+        JSONObject jsonObject;
+        Gson gson = new Gson();
+        jsonObject = gson.fromJson(json, JSONObject.class);
         db.saveAllFromJson(jsonObject);
 
         Cursor cursor = db.getAllData();
@@ -140,10 +227,8 @@ public class DatabaseHelperTest {
             names.add(cursor.getString(cursor.getColumnIndex("RecipeName")));
         }
 
-        assertEquals(names.size(),8);
-        assertEquals(names.get(0),"Citra SMaSH");
-
-
+        assertEquals(names.size(),21);
+        assertEquals(names.get(20),"White Stout");
 
     }
 }

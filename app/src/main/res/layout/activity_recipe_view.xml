@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:id="@+id/save_button"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_alignParentEnd="true"
@@ -41,6 +42,7 @@
                 android:textSize="40sp"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black"
+                android:textAlignment="center"
 
                 />
 
@@ -595,40 +597,7 @@
                             android:textColor="@color/black"/>
 
                     </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 l"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Infusion"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="65"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="60"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
 
-                    </TableRow>
 
                 </TableLayout>
 
