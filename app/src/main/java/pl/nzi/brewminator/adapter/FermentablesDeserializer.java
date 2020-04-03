@@ -85,7 +85,7 @@ public class FermentablesDeserializer implements JsonDeserializer<FERMENTABLES> 
         try {
             fermentable.setORIGIN(step.get("ORIGIN").getAsString());
         } catch (NullPointerException e) {
-            fermentable.setNAME(null);
+            fermentable.setORIGIN(null);
         }
         try {
             fermentable.setTYPE(step.get("TYPE").getAsString());

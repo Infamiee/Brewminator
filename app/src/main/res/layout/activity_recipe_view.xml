@@ -355,33 +355,6 @@
                             android:textColor="@color/black"/>
 
                     </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3 kg"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Munich"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Grain"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-
-                    </TableRow>
 
                 </TableLayout>
 
@@ -408,6 +381,7 @@
                     />
 
                 <TableLayout
+                    android:id="@+id/hops_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/hops_textview"

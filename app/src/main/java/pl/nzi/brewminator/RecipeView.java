@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.digidemic.unitof.D;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,6 +37,7 @@ import pl.nzi.brewminator.adapter.MashStepsDeserialzier;
 import pl.nzi.brewminator.adapter.MiscAdapter;
 import pl.nzi.brewminator.model.FERMENTABLE;
 import pl.nzi.brewminator.model.FERMENTABLES;
+import pl.nzi.brewminator.model.HOP;
 import pl.nzi.brewminator.model.HOPS;
 import pl.nzi.brewminator.model.MASHSTEPS;
 import pl.nzi.brewminator.model.MISCS;
@@ -195,7 +198,8 @@ public class RecipeView extends AppCompatActivity {
         textView = findViewById(R.id.preboil_textView);
         s = recipe.getBATCHSIZE().trim();
         if (!s.isEmpty()){
-            textView.setText(s);
+            Double a = Double.parseDouble(s);
+            textView.setText(String.format("%.2f",a));
         }else {
             textView.setText("N/A");
         }
@@ -203,7 +207,8 @@ public class RecipeView extends AppCompatActivity {
         textView = findViewById(R.id.sizeafter_textView);
         s = recipe.getBOILSIZE().trim();
         if (!s.isEmpty()){
-            textView.setText(s);
+            Double a = Double.parseDouble(s);
+            textView.setText(String.format("%.2f",a));
         }else {
             textView.setText("N/A");
         }
@@ -222,8 +227,89 @@ public class RecipeView extends AppCompatActivity {
 
         List<FERMENTABLE> fermentables = recipe.getFERMENTABLES().getFERMENTABLE();
         TableLayout tableLayout = findViewById(R.id.fermentables_table);
+        for (FERMENTABLE fermentable : recipe.getFERMENTABLES().getFERMENTABLE()){
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.fermentables_row,tableLayout,false);
+            TextView amount = tableRow.findViewById(R.id.fermentables_amount);
+            TextView name = tableRow.findViewById(R.id.fermentables_name);
+            TextView type = tableRow.findViewById(R.id.fermentables_type);
+            String s = fermentable.getAMOUNT();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                Double a = Double.parseDouble(s);
+                amount.setText(String.format("%.2f",a));
+            }else {
+                amount.setText("N/A");
+            }
+            s = fermentable.getNAME();
+            if (s!=null &&  !s.trim().isEmpty()){
+                name.setText(s.trim());
+            }else {
+                name.setText("N/A");
+            }
+            s = fermentable.getTYPE();
+            if (s!=null &&  !s.trim().isEmpty()){
+                type.setText(s.trim());
+            }else {
+                type.setText("N/A");
+            }
+
+            tableLayout.addView(tableRow);
+        }
+
 
     }
+
+    private void updateHops(){
+        List<HOP> hops = recipe.getHOPS().getHOP();
+
+        TableLayout tableLayout = findViewById(R.id.hops_table);
+
+        for (HOP hop : hops){
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.hops_row,tableLayout,false);
+            TextView amount = tableRow.findViewById(R.id.hops_amount);
+            TextView name = tableRow.findViewById(R.id.hops_name);
+            TextView type = tableRow.findViewById(R.id.hops_type);
+            TextView use = tableRow.findViewById(R.id.hops_use);
+            TextView time = tableRow.findViewById(R.id.hops_time);
+
+            String s = hop.getAMOUNT();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                Double a = Double.parseDouble(s);
+                amount.setText(String.format("%.2f",a));
+            }else {
+                amount.setText("N/A");
+            }
+            s = hop.getNAME();
+            if (s!=null &&  !s.trim().isEmpty()){
+                name.setText(s.trim());
+            }else {
+                name.setText("N/A");
+            }
+            s = hop.getFORM();
+            if (s!=null &&  !s.trim().isEmpty()){
+                type.setText(s.trim());
+            }else {
+                type.setText("N/A");
+            }
+            s = hop.getUSE();
+            if (s!=null &&  !s.trim().isEmpty()){
+                use.setText(s.trim());
+            }else {
+                use.setText("N/A");
+            }
+            s = hop.getTIME();
+            if (s!=null &&  !s.trim().isEmpty()){
+                time.setText(s.trim());
+            }else {
+                time.setText("N/A");
+            }
+
+            tableLayout.addView(tableRow);
+
+        }
+
+    }
+
+
 
 
 }
