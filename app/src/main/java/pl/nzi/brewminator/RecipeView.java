@@ -39,7 +39,9 @@ import pl.nzi.brewminator.model.FERMENTABLE;
 import pl.nzi.brewminator.model.FERMENTABLES;
 import pl.nzi.brewminator.model.HOP;
 import pl.nzi.brewminator.model.HOPS;
+import pl.nzi.brewminator.model.MASHSTEP;
 import pl.nzi.brewminator.model.MASHSTEPS;
+import pl.nzi.brewminator.model.MISC;
 import pl.nzi.brewminator.model.MISCS;
 import pl.nzi.brewminator.model.Recipe;
 
@@ -142,6 +144,10 @@ public class RecipeView extends AppCompatActivity {
         updateGravities();
         updateStats();
         updateFermentables();
+        updateHops();
+        updateMashGuidlines();
+        updateOtherIngredients();
+        updateYeast();
     }
 
 
@@ -273,8 +279,8 @@ public class RecipeView extends AppCompatActivity {
 
             String s = hop.getAMOUNT();
             if (s!=null &&  !s.trim().isEmpty() ){
-                Double a = Double.parseDouble(s);
-                amount.setText(String.format("%.2f",a));
+                Double a = Double.parseDouble(s) * 1000;
+                amount.setText(String.format("%.2f",a)+" g");
             }else {
                 amount.setText("N/A");
             }
@@ -298,7 +304,17 @@ public class RecipeView extends AppCompatActivity {
             }
             s = hop.getTIME();
             if (s!=null &&  !s.trim().isEmpty()){
-                time.setText(s.trim());
+                int t = Integer.parseInt(s);
+                int hours = t / 60;
+                int minutes = t % 60;
+                if (hours==0){
+                    time.setText(minutes + " min");
+                }else if(minutes==0) {
+                    time.setText(hours+" h");
+                }else {
+                    time.setText(hours+":"+minutes);
+                }
+
             }else {
                 time.setText("N/A");
             }
@@ -309,6 +325,175 @@ public class RecipeView extends AppCompatActivity {
 
     }
 
+    private void updateMashGuidlines(){
+        List<MASHSTEP> mashsteps;
+        try {
+            mashsteps = recipe.getMASH().getMASHSTEPS().getMASHSTEP();
+
+        }catch (Exception e){
+            return;
+        }
+
+        TableLayout tableLayout = findViewById(R.id.mash_table);
+
+        for(MASHSTEP mashstep:mashsteps){
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.mash_guidlines_row,tableLayout,false);
+            TextView amount = tableRow.findViewById(R.id.mash_amount);
+            TextView temp = tableRow.findViewById(R.id.mash_temp);
+            TextView type = tableRow.findViewById(R.id.mash_type);
+            TextView time = tableRow.findViewById(R.id.mash_time);
+            String s = mashstep.getINFUSEAMOUNT();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                Double a = Double.parseDouble(s);
+                amount.setText(String.format("%.2f",a)+" g");
+            }else {
+                amount.setText("N/A");
+            }
+            s = mashstep.getTYPE();
+            if (s!=null &&  !s.trim().isEmpty()){
+                type.setText(s.trim());
+            }else {
+                type.setText("N/A");
+            }
+            s = mashstep.getSTEPTIME();
+            if (s!=null &&  !s.trim().isEmpty()){
+                time.setText(s.trim());
+            }else {
+                time.setText("N/A");
+            }
+            s = mashstep.getSTEPTEMP();
+            if (s!=null &&  !s.trim().isEmpty()){
+                temp.setText(s.substring(0,2));
+            }else {
+                temp.setText("N/A");
+            }
+
+
+            tableLayout.addView(tableRow);
+        }
+
+
+    }
+
+    private void updateOtherIngredients(){
+        List<MISC> miscs;
+        try {
+            miscs = recipe.getMISCS().getMISC();
+
+        }catch (Exception e){
+            return;
+        }
+
+        TableLayout tableLayout = findViewById(R.id.misc_table);
+
+        for (MISC misc:miscs){
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.misc_row,tableLayout,false);
+            TextView amount = tableRow.findViewById(R.id.misc_amount);
+            TextView name = tableRow.findViewById(R.id.misc_name);
+            TextView time = tableRow.findViewById(R.id.misc_time);
+            TextView use = tableRow.findViewById(R.id.misc_use);
+            String s = misc.getAMOUNT();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                Double a = Double.parseDouble(s)*1000;
+                amount.setText(String.format("%.2f",a)+" g");
+            }else {
+                amount.setText("N/A");
+            }
+            s = misc.getNAME();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                name.setText(s);
+            }else {
+                name.setText("N/A");
+            }
+            s = misc.getNAME();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                name.setText(s);
+            }else {
+                name.setText("N/A");
+            }
+            s = misc.getTIME();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                int t = Integer.parseInt(s);
+                int hours = t / 60;
+                int minutes = t % 60;
+                if (hours==0){
+                    time.setText(minutes + " min");
+                }else if(minutes==0) {
+                    time.setText(hours+" h");
+                }else {
+                    time.setText(hours+":"+minutes);
+                }
+            }else {
+                time.setText("N/A");
+            }
+            s = misc.getUSE();
+            if (s!=null &&  !s.trim().isEmpty() ){
+                use.setText(s);
+            }else {
+                use.setText("N/A");
+            }
+
+            tableLayout.addView(tableRow);
+
+
+        }
+
+    }
+
+    private void updateYeast(){
+        TextView textView = findViewById(R.id.yeastname_textView);
+        String s = recipe.getYEASTS().getYEAST().getNAME();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.yeastlaboratory_textView);
+        s = recipe.getYEASTS().getYEAST().getLABORATORY();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.yeastype_textView);
+        s = recipe.getYEASTS().getYEAST().getTYPE();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.yeastamount_textview);
+        s = recipe.getYEASTS().getYEAST().getAMOUNT();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.attenuation_textView);
+        s = recipe.getYEASTS().getYEAST().getATTENUATION();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.flocculation_textView);
+        s = recipe.getYEASTS().getYEAST().getFLOCCULATION();
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+        textView = findViewById(R.id.optimum_textView);
+        s = recipe.getYEASTS().getYEAST().getMINTEMPERATURE().substring(0,2)+"-"+recipe.getYEASTS().getYEAST().getMAXTEMPERATURE().substring(0,2);
+
+        if (s!=null &&  !s.trim().isEmpty() ){
+            textView.setText(s);
+        }else {
+            textView.setText("N/A");
+        }
+
+
+    }
 
 
 

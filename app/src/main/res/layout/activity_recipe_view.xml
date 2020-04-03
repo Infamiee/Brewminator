@@ -429,126 +429,7 @@
                             android:textColor="@color/black"/>
 
                     </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="42 g"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Citra"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pellet"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Boil"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="60"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
 
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="42 g"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Citra"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pellet"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Boil"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="60"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="42 g"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Citra"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pellet"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Boil"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="60"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/black"/>
-
-                    </TableRow>
                 </TableLayout>
 
             </RelativeLayout>
@@ -573,6 +454,7 @@
                 />
 
             <TableLayout
+                android:id="@+id/mash_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/mashguid_textview"
@@ -672,6 +554,7 @@
                     />
 
                 <TableLayout
+                    android:id="@+id/misc_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/misc_textview"
@@ -797,7 +680,6 @@
                             android:id="@+id/yeastname_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="London Ale Yeast WLP013"
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
@@ -821,7 +703,7 @@
                             android:id="@+id/yeastlaboratory_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="White Labs"
+
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
@@ -846,7 +728,6 @@
                             android:id="@+id/yeastype_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="All Grain"
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
@@ -870,7 +751,6 @@
                             android:id="@+id/yeastamount_textview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Porter"
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
@@ -918,7 +798,6 @@
                             android:id="@+id/flocculation_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="medium"
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
@@ -942,61 +821,14 @@
                             android:id="@+id/optimum_textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="25 l"
                             android:fontFamily="sans-serif"
                             android:textSize="15sp"
                             android:textColor="@color/black"
                             />
 
                     </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fermentation temp:"
-                            android:fontFamily="sans-serif"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            />
 
-                        <TextView
-                            android:id="@+id/fermentationtemp_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 l"
-                            android:fontFamily="sans-serif"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            />
 
-                    </TableRow>
-                    <TableRow
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Efficiency:"
-                            android:fontFamily="sans-serif"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            />
-
-                        <TextView
-                            android:id="@+id/yeastefficiency_textView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="75"
-                            android:fontFamily="sans-serif"
-                            android:textSize="15sp"
-                            android:textColor="@color/black"
-                            />
-
-                    </TableRow>
                 </TableLayout>
             </RelativeLayout>
             <Space
