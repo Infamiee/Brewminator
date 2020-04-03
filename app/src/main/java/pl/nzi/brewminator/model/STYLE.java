@@ -6,9 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class STYLE {
 
-    public STYLE() {
-    }
-
     @SerializedName("ABV_MAX")
     @Expose
     private String aBVMAX;

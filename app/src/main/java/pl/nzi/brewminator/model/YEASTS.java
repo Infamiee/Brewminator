@@ -5,8 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class YEASTS {
-    public YEASTS() {
-    }
 
     @SerializedName("YEAST")
     @Expose

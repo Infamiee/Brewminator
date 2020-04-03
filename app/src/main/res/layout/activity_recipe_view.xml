@@ -1,6 +1,1052 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include layout="@layout/toolbar"/>
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_below="@+id/toolbar"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="15dp"
+                android:drawableTop="@drawable/ic_star_border_black_24dp"
+                android:background="@android:color/transparent"
+
+                 />
+
+            <TextView
+                android:id="@+id/recipe_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/fjalla_one"
+                android:maxWidth="200dp"
+                android:textSize="40sp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+
+                />
+
+            <RelativeLayout
+                android:id="@+id/gravities_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recipe_name_textview"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="20dp">
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="*"
+                >
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Original Gravity"
+                        android:textSize="17sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Final Gravity"
+                        android:textSize="17sp"
+
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IBU"
+                        android:textAlignment="center"
+                        android:textSize="17sp"
+
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/gravities_og_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center"
+                        />
+                    <TextView
+                        android:id="@+id/gravities_fg_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:textAlignment="center"
+                        android:textSize="20sp"
+
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/gravities_ibu_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="20sp"
+
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+
+
+            </TableLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/stats_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gravities_layout"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="20dp"
+
+
+                >
+                <TextView
+                    android:id="@+id/stats_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/stats"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/stats_textview"
+                    android:stretchColumns="*"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginEnd="70dp"
+                    android:layout_marginTop="10dp"
+                    >
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Type:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/Type_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Style:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/style_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Boil time:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/boiltime_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pre-boil size:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/preboil_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Size after boiling:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/sizeafter_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Efficiency:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/efficiency_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                </TableLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fermentables_layout"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/stats_layout">
+                <TextView
+                    android:id="@+id/fermentables_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Fermentables"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    />
+
+                <TableLayout
+                    android:id="@+id/fermentables_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/fermentables_textview"
+                    android:stretchColumns="*"
+                    android:layout_marginStart="35dp"
+                    >
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amount"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Type"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3 kg"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Munich"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Grain"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/hops_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fermentables_layout"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/hops_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Hops"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hops_textview"
+                    android:stretchColumns="*"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="10dp">
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amount"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Type"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Use"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Time"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="42 g"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Citra"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pellet"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Boil"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="60"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="42 g"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Citra"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pellet"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Boil"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="60"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="42 g"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Citra"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pellet"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Boil"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="60"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                </TableLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mashguid_layout"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/hops_layout">
+            <TextView
+                android:id="@+id/mashguid_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Mash guidlines"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
+                />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mashguid_textview"
+                android:stretchColumns="*"
+                android:layout_marginStart="35dp"
+                >
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Amount"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Type"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temp"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20 l"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Infusion"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="65"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="60"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/black"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+        </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/misc_layout"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/mashguid_layout">
+                <TextView
+                    android:id="@+id/misc_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Other ingredients"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/misc_textview"
+                    android:stretchColumns="*"
+                    android:layout_marginStart="35dp"
+                    >
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amount"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Time"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Use"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20 l"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Infusion"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="65"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="60"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/black"/>
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/yeast_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/misc_layout"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                >
+                <TextView
+                    android:id="@+id/yeast_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Yeast"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif"
+                    android:textStyle="bold"
+                    />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/yeast_textview"
+                    android:stretchColumns="*"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginEnd="70dp"
+                    android:layout_marginTop="10dp"
+                    >
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/yeastname_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="London Ale Yeast WLP013"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Laboratory:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/yeastlaboratory_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="White Labs"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Type:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/yeastype_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="All Grain"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Amount:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/yeastamount_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Porter"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Attenuation:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/attenuation_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="75"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Flocculation:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/flocculation_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="medium"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="optimum temp:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/optimum_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="25 l"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fermentation temp:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/fermentationtemp_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="20 l"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Efficiency:"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                        <TextView
+                            android:id="@+id/yeastefficiency_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="75"
+                            android:fontFamily="sans-serif"
+                            android:textSize="15sp"
+                            android:textColor="@color/black"
+                            />
+
+                    </TableRow>
+                </TableLayout>
+            </RelativeLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@id/yeast_layout"/>
+
+        </RelativeLayout>
+
+
+
+
+    </ScrollView>
+
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/brew_button"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/brew_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
+
 </RelativeLayout>

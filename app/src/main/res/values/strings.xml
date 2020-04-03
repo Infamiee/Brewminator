@@ -26,5 +26,7 @@
     <string name="app_label">Search</string>
     <string name="search_hint">Looking for recipe?</string>
     <string name="search">Search</string>
+    <string name="save">Save</string>
+    <string name="stats">Stats</string>
 
 </resources>

@@ -5,15 +5,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MASH {
-    public MASH() {
-    }
 
     @SerializedName("GRAIN_TEMP")
     @Expose
     private String gRAINTEMP;
     @SerializedName("MASH_STEPS")
     @Expose
-    private Object mASHSTEPS;
+    private MASHSTEPS mASHSTEPS;
     @SerializedName("NAME")
     @Expose
     private String nAME;
@@ -29,11 +27,11 @@ public class MASH {
         this.gRAINTEMP = gRAINTEMP;
     }
 
-    public Object getMASHSTEPS() {
+    public MASHSTEPS getMASHSTEPS() {
         return mASHSTEPS;
     }
 
-    public void setMASHSTEPS(Object mASHSTEPS) {
+    public void setMASHSTEPS(MASHSTEPS mASHSTEPS) {
         this.mASHSTEPS = mASHSTEPS;
     }
 

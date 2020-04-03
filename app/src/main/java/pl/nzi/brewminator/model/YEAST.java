@@ -5,15 +5,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class YEAST {
-    public YEAST() {
-    }
 
     @SerializedName("AMOUNT")
     @Expose
     private String aMOUNT;
-    @SerializedName("AMOUNT_IS_WEIGHT")
-    @Expose
-    private String aMOUNTISWEIGHT;
     @SerializedName("ATTENUATION")
     @Expose
     private String aTTENUATION;
@@ -51,14 +46,6 @@ public class YEAST {
 
     public void setAMOUNT(String aMOUNT) {
         this.aMOUNT = aMOUNT;
-    }
-
-    public String getAMOUNTISWEIGHT() {
-        return aMOUNTISWEIGHT;
-    }
-
-    public void setAMOUNTISWEIGHT(String aMOUNTISWEIGHT) {
-        this.aMOUNTISWEIGHT = aMOUNTISWEIGHT;
     }
 
     public String getATTENUATION() {

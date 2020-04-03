@@ -5,8 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Recipe {
-    public Recipe() {
-    }
 
     @SerializedName("BATCH_SIZE")
     @Expose
@@ -19,7 +17,7 @@ public class Recipe {
     private Object bFCO2LEVEL;
     @SerializedName("BF_CO2_UNIT")
     @Expose
-    private Object bFCO2UNIT;
+    private String bFCO2UNIT;
     @SerializedName("BF_PRIMING_AMOUNT")
     @Expose
     private Object bFPRIMINGAMOUNT;
@@ -34,7 +32,7 @@ public class Recipe {
     private String bOILTIME;
     @SerializedName("BREWER")
     @Expose
-    private Object bREWER;
+    private String bREWER;
     @SerializedName("CARBONATION_USED")
     @Expose
     private Object cARBONATIONUSED;
@@ -79,25 +77,31 @@ public class Recipe {
     private MASH mASH;
     @SerializedName("MISCS")
     @Expose
-    private Object mISCS;
+    private MISCS mISCS;
     @SerializedName("NAME")
     @Expose
     private String nAME;
     @SerializedName("NOTES")
     @Expose
-    private Object nOTES;
+    private String nOTES;
     @SerializedName("NO_CHILL_EXTRA_MINUTES")
     @Expose
     private Object nOCHILLEXTRAMINUTES;
     @SerializedName("OG")
     @Expose
     private String oG;
+    @SerializedName("PITCH_RATE")
+    @Expose
+    private String pITCHRATE;
     @SerializedName("PRIMARY_TEMP")
     @Expose
     private String pRIMARYTEMP;
     @SerializedName("PRIMING_SUGAR_NAME")
     @Expose
     private Object pRIMINGSUGARNAME;
+    @SerializedName("STARTING_MASH_THICKNESS")
+    @Expose
+    private String sTARTINGMASHTHICKNESS;
     @SerializedName("STYLE")
     @Expose
     private STYLE sTYLE;
@@ -106,13 +110,13 @@ public class Recipe {
     private String tYPE;
     @SerializedName("URL")
     @Expose
-    private Object uRL;
+    private String uRL;
     @SerializedName("VERSION")
     @Expose
     private String vERSION;
     @SerializedName("WATERS")
     @Expose
-    private Object wATERS;
+    private WATERS wATERS;
     @SerializedName("YEASTS")
     @Expose
     private YEASTS yEASTS;
@@ -144,11 +148,11 @@ public class Recipe {
         this.bFCO2LEVEL = bFCO2LEVEL;
     }
 
-    public Object getBFCO2UNIT() {
+    public String getBFCO2UNIT() {
         return bFCO2UNIT;
     }
 
-    public void setBFCO2UNIT(Object bFCO2UNIT) {
+    public void setBFCO2UNIT(String bFCO2UNIT) {
         this.bFCO2UNIT = bFCO2UNIT;
     }
 
@@ -184,11 +188,11 @@ public class Recipe {
         this.bOILTIME = bOILTIME;
     }
 
-    public Object getBREWER() {
+    public String getBREWER() {
         return bREWER;
     }
 
-    public void setBREWER(Object bREWER) {
+    public void setBREWER(String bREWER) {
         this.bREWER = bREWER;
     }
 
@@ -304,11 +308,11 @@ public class Recipe {
         this.mASH = mASH;
     }
 
-    public Object getMISCS() {
+    public MISCS getMISCS() {
         return mISCS;
     }
 
-    public void setMISCS(Object mISCS) {
+    public void setMISCS(MISCS mISCS) {
         this.mISCS = mISCS;
     }
 
@@ -320,11 +324,11 @@ public class Recipe {
         this.nAME = nAME;
     }
 
-    public Object getNOTES() {
+    public String getNOTES() {
         return nOTES;
     }
 
-    public void setNOTES(Object nOTES) {
+    public void setNOTES(String nOTES) {
         this.nOTES = nOTES;
     }
 
@@ -344,6 +348,14 @@ public class Recipe {
         this.oG = oG;
     }
 
+    public String getPITCHRATE() {
+        return pITCHRATE;
+    }
+
+    public void setPITCHRATE(String pITCHRATE) {
+        this.pITCHRATE = pITCHRATE;
+    }
+
     public String getPRIMARYTEMP() {
         return pRIMARYTEMP;
     }
@@ -358,6 +370,14 @@ public class Recipe {
 
     public void setPRIMINGSUGARNAME(Object pRIMINGSUGARNAME) {
         this.pRIMINGSUGARNAME = pRIMINGSUGARNAME;
+    }
+
+    public String getSTARTINGMASHTHICKNESS() {
+        return sTARTINGMASHTHICKNESS;
+    }
+
+    public void setSTARTINGMASHTHICKNESS(String sTARTINGMASHTHICKNESS) {
+        this.sTARTINGMASHTHICKNESS = sTARTINGMASHTHICKNESS;
     }
 
     public STYLE getSTYLE() {
@@ -376,11 +396,11 @@ public class Recipe {
         this.tYPE = tYPE;
     }
 
-    public Object getURL() {
+    public String getURL() {
         return uRL;
     }
 
-    public void setURL(Object uRL) {
+    public void setURL(String uRL) {
         this.uRL = uRL;
     }
 
@@ -392,11 +412,11 @@ public class Recipe {
         this.vERSION = vERSION;
     }
 
-    public Object getWATERS() {
+    public WATERS getWATERS() {
         return wATERS;
     }
 
-    public void setWATERS(Object wATERS) {
+    public void setWATERS(WATERS wATERS) {
         this.wATERS = wATERS;
     }
 
@@ -416,46 +436,4 @@ public class Recipe {
         this.yEASTSTARTER = yEASTSTARTER;
     }
 
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                "bATCHSIZE='" + bATCHSIZE + '\'' +
-                ", bATCHSIZEMODE='" + bATCHSIZEMODE + '\'' +
-                ", bFCO2LEVEL=" + bFCO2LEVEL +
-                ", bFCO2UNIT=" + bFCO2UNIT +
-                ", bFPRIMINGAMOUNT=" + bFPRIMINGAMOUNT +
-                ", bFPRIMINGMETHOD=" + bFPRIMINGMETHOD +
-                ", bOILSIZE='" + bOILSIZE + '\'' +
-                ", bOILTIME='" + bOILTIME + '\'' +
-                ", bREWER=" + bREWER +
-                ", cARBONATIONUSED=" + cARBONATIONUSED +
-                ", dISPLAYBATCHSIZE='" + dISPLAYBATCHSIZE + '\'' +
-                ", dISPLAYBOILSIZE='" + dISPLAYBOILSIZE + '\'' +
-                ", eFFICIENCY='" + eFFICIENCY + '\'' +
-                ", eSTABV='" + eSTABV + '\'' +
-                ", eSTCOLOR='" + eSTCOLOR + '\'' +
-                ", eSTFG='" + eSTFG + '\'' +
-                ", eSTOG='" + eSTOG + '\'' +
-                ", fERMENTABLES=" + fERMENTABLES +
-                ", fG='" + fG + '\'' +
-                ", hOPS=" + hOPS +
-                ", iBU='" + iBU + '\'' +
-                ", iBUMETHOD='" + iBUMETHOD + '\'' +
-                ", mASH=" + mASH +
-                ", mISCS=" + mISCS +
-                ", nAME='" + nAME + '\'' +
-                ", nOTES=" + nOTES +
-                ", nOCHILLEXTRAMINUTES=" + nOCHILLEXTRAMINUTES +
-                ", oG='" + oG + '\'' +
-                ", pRIMARYTEMP='" + pRIMARYTEMP + '\'' +
-                ", pRIMINGSUGARNAME=" + pRIMINGSUGARNAME +
-                ", sTYLE=" + sTYLE +
-                ", tYPE='" + tYPE + '\'' +
-                ", uRL=" + uRL +
-                ", vERSION='" + vERSION + '\'' +
-                ", wATERS=" + wATERS +
-                ", yEASTS=" + yEASTS +
-                ", yEASTSTARTER='" + yEASTSTARTER + '\'' +
-                '}';
-    }
 }

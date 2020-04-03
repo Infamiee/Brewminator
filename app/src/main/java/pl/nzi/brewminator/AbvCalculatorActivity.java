@@ -13,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import pl.nzi.brewminator.calculator.AbvCalculator;
 import pl.nzi.brewminator.exception.WrongGravitiesException;
 
@@ -32,7 +34,16 @@ public class AbvCalculatorActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.cropped_logo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        View logoView = getToolbarLogoIcon(toolbar);
+        logoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(AbvCalculatorActivity.this,HomeActivity.class);
+                startActivity(intent1);
+                finish();
 
+            }
+        });
 
 
         og = (TextView) findViewById(R.id.og);
@@ -82,6 +93,24 @@ public class AbvCalculatorActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public static View getToolbarLogoIcon(Toolbar toolbar){
+        //check if contentDescription previously was set
+        boolean hadContentDescription = android.text.TextUtils.isEmpty(toolbar.getLogoDescription());
+        String contentDescription = String.valueOf(!hadContentDescription ? toolbar.getLogoDescription() : "logoContentDescription");
+        toolbar.setLogoDescription(contentDescription);
+        ArrayList<View> potentialViews = new ArrayList<View>();
+        //find the view based on it's content description, set programatically or with android:contentDescription
+        toolbar.findViewsWithText(potentialViews,contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+        //Nav icon is always instantiated at this point because calling setLogoDescription ensures its existence
+        View logoIcon = null;
+        if(potentialViews.size() > 0){
+            logoIcon = potentialViews.get(0);
+        }
+        //Clear content description if not previously present
+        if(hadContentDescription)
+            toolbar.setLogoDescription(null);
+        return logoIcon;
+    }
 
 
 }

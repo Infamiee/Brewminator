@@ -38,6 +38,15 @@ public class HOP {
     @SerializedName("VERSION")
     @Expose
     private String vERSION;
+    @SerializedName("HOP_TEMP")
+    @Expose
+    private String hOPTEMP;
+    @SerializedName("TEMPERATURE")
+    @Expose
+    private String tEMPERATURE;
+    @SerializedName("UTILIZATION")
+    @Expose
+    private String uTILIZATION;
 
     public String getALPHA() {
         return aLPHA;
@@ -101,6 +110,30 @@ public class HOP {
 
     public void setVERSION(String vERSION) {
         this.vERSION = vERSION;
+    }
+
+    public String getHOPTEMP() {
+        return hOPTEMP;
+    }
+
+    public void setHOPTEMP(String hOPTEMP) {
+        this.hOPTEMP = hOPTEMP;
+    }
+
+    public String getTEMPERATURE() {
+        return tEMPERATURE;
+    }
+
+    public void setTEMPERATURE(String tEMPERATURE) {
+        this.tEMPERATURE = tEMPERATURE;
+    }
+
+    public String getUTILIZATION() {
+        return uTILIZATION;
+    }
+
+    public void setUTILIZATION(String uTILIZATION) {
+        this.uTILIZATION = uTILIZATION;
     }
 
 }

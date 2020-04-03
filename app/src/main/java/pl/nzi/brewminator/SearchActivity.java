@@ -15,6 +15,7 @@ import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import java.util.ArrayList;
@@ -109,4 +110,6 @@ public class SearchActivity extends AppCompatActivity implements RecipeAdapter.O
         startActivity(intent);
         finish();
     }
+
+
 }

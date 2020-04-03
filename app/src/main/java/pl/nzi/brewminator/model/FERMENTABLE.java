@@ -5,8 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class FERMENTABLE {
-    public FERMENTABLE() {
-    }
 
     @SerializedName("ADD_AFTER_BOIL")
     @Expose
@@ -25,7 +23,7 @@ public class FERMENTABLE {
     private String nAME;
     @SerializedName("ORIGIN")
     @Expose
-    private String oRIGIN;
+    private Object oRIGIN;
     @SerializedName("TYPE")
     @Expose
     private String tYPE;
@@ -76,11 +74,11 @@ public class FERMENTABLE {
         this.nAME = nAME;
     }
 
-    public String getORIGIN() {
+    public Object getORIGIN() {
         return oRIGIN;
     }
 
-    public void setORIGIN(String oRIGIN) {
+    public void setORIGIN(Object oRIGIN) {
         this.oRIGIN = oRIGIN;
     }
 
