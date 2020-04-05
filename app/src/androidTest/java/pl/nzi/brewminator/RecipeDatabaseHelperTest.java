@@ -6,12 +6,9 @@ import android.database.Cursor;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
@@ -19,21 +16,20 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class DatabaseHelperTest {
+public class RecipeDatabaseHelperTest {
 
 
-    private DatabaseHelper db;
+    private RecipeDatabaseHelper db;
 
 
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
-        db = new DatabaseHelper(context);
+        db = new RecipeDatabaseHelper(context);
         db.onUpgrade(db.getWritableDatabase(),1,2);
     }
 

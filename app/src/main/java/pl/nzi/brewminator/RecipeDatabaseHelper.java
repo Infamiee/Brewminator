@@ -19,14 +19,14 @@ import org.json.simple.JSONObject;
 import java.util.Iterator;
 import java.util.Set;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class RecipeDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String TABLE_NAME = "Recipes";
     private static final String ID = "RecipeId";
     private static final String RECIPE_NAME = "RecipeName";
     private static final String STYLE = "Style";
 
-    public DatabaseHelper(@Nullable Context context ) {
+    public RecipeDatabaseHelper(@Nullable Context context ) {
         super(context, TABLE_NAME, null,1);
     }
 

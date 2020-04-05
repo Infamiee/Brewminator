@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,12 +25,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.digidemic.unitof.D;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,28 +49,27 @@ import pl.nzi.brewminator.model.Recipe;
 public class RecipeView extends AppCompatActivity {
     private final static String TAG = "Recipe View";
     private Recipe recipe;
-    DatabaseHelper db;
+    RecipeDatabaseHelper db;
     ImageButton brewButton;
     Button saveButton;
-
+    ImageView imageView;
+    AnimationDrawable animation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_view);
+        setContentView(R.layout.loading_layout);
+
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setIcon(R.drawable.cropped_logo);
-
-        brewButton = findViewById(R.id.brew_button);
-        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
-        saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show());
-        Intent intent = getIntent();
-
-        int id = intent.getIntExtra("id", -1);
-
+        imageView = findViewById(R.id.loading);
+        imageView.setBackgroundResource(R.drawable.loading);
+        animation = (AnimationDrawable) imageView.getBackground();
+        animation.start();
         View logoView = getToolbarLogoIcon(toolbar);
         logoView.setOnClickListener(v -> {
             Intent intent1 = new Intent(RecipeView.this, HomeActivity.class);
@@ -79,26 +79,11 @@ public class RecipeView extends AppCompatActivity {
         });
 
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://192.168.1.18:5000/recipe?id=" + String.valueOf(id);
-
-        Log.d(TAG, "onCreate: " + id);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    Gson gson = new GsonBuilder()
-                            .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
-                            .registerTypeAdapter(FERMENTABLES.class, new FermentablesDeserializer())
-                            .registerTypeAdapter(HOPS.class, new HopsAdapter())
-                            .registerTypeAdapter(MISCS.class, new MiscAdapter())
-                            .create();
-                    Log.d(TAG, "onCreate: " + response);
-                    recipe = gson.fromJson(response, Recipe.class);
-                    updateRecipeView();
-                }, Throwable::printStackTrace);
-
-        queue.add(stringRequest);
+        new LoadRecipe().execute();
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +106,46 @@ public class RecipeView extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    public class LoadRecipe extends AsyncTask<Void, Void, String> {
+        @Override protected String doInBackground(Void... params) {
+            Intent intent = getIntent();
+            int id =  intent.getIntExtra("id",-1);
+            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+            String url = "http://192.168.1.18:5000/recipe?id=" + String.valueOf(id);
+
+            Log.d(TAG, "onCreate: " + id);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    response -> {
+                        Gson gson = new GsonBuilder()
+                                .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
+                                .registerTypeAdapter(FERMENTABLES.class, new FermentablesDeserializer())
+                                .registerTypeAdapter(HOPS.class, new HopsAdapter())
+                                .registerTypeAdapter(MISCS.class, new MiscAdapter())
+                                .create();
+                        Log.d(TAG, "onCreate: " + response);
+                        recipe = gson.fromJson(response, Recipe.class);
+                        setContentView(R.layout.activity_recipe_view);
+                        if (recipe == null){
+                            setContentView(R.layout.couldn_load_recipe);
+                            Toolbar toolbar = findViewById(R.id.toolbar);
+                            setSupportActionBar(toolbar);
+                        }
+
+                        updateRecipeView();
+                    }, error -> {
+                setContentView(R.layout.couldn_load_recipe);
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setIcon(R.drawable.cropped_logo);
+            });
+
+            queue.add(stringRequest);
+            return "xd";
+        }
+
+        }
 
     public static View getToolbarLogoIcon(Toolbar toolbar) {
         //check if contentDescription previously was set
@@ -142,6 +167,12 @@ public class RecipeView extends AppCompatActivity {
     }
 
     private void updateRecipeView() {
+        setContentView(R.layout.activity_recipe_view);
+        brewButton = findViewById(R.id.brew_button);
+        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
+        saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show());
+
         updateName();
         updateGravities();
         updateStats();

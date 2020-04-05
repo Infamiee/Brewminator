@@ -6,17 +6,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SortedList;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +18,6 @@ import java.util.List;
 
 import pl.nzi.Brewminator;
 import pl.nzi.brewminator.adapter.RecipeAdapter;
-import pl.nzi.brewminator.model.Recipe;
 import pl.nzi.brewminator.model.RecipeSearch;
 
 
@@ -32,7 +25,7 @@ public class SearchActivity extends AppCompatActivity implements RecipeAdapter.O
     SearchView searchView;
     Toolbar toolbar;
     RecipeAdapter recipeAdapter;
-    DatabaseHelper db;
+    RecipeDatabaseHelper db;
     List<RecipeSearch> fullList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +34,7 @@ public class SearchActivity extends AppCompatActivity implements RecipeAdapter.O
         searchView = findViewById(R.id.search_view);
         searchView.setIconified(false);
 
-        db = new DatabaseHelper(Brewminator.getAppContext());
+        db = new RecipeDatabaseHelper(Brewminator.getAppContext());
 
         setUpRecyclerView();
         toolbar = findViewById(R.id.toolbar);

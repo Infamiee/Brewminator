@@ -9,32 +9,28 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.digidemic.unitof.S;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import pl.nzi.Brewminator;
-import pl.nzi.brewminator.DatabaseHelper;
+import pl.nzi.brewminator.RecipeDatabaseHelper;
 import pl.nzi.brewminator.R;
-import pl.nzi.brewminator.model.Recipe;
 import pl.nzi.brewminator.model.RecipeSearch;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> implements Filterable {
     private List<RecipeSearch> recipeList;
     private List<RecipeSearch> recipeListFull;
-    private DatabaseHelper db;
+    private RecipeDatabaseHelper db;
     private OnClickRecipeListener onClickRecipeListener;
 
     public RecipeAdapter(List<RecipeSearch> exampleList,OnClickRecipeListener onClickRecipeListener) {
         this.recipeList = exampleList;
         this.onClickRecipeListener = onClickRecipeListener;
         recipeListFull = new ArrayList<>(exampleList);
-        db = new DatabaseHelper(Brewminator.getAppContext());
+        db = new RecipeDatabaseHelper(Brewminator.getAppContext());
 
     }
 

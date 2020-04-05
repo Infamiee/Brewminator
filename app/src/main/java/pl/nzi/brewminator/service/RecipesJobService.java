@@ -9,20 +9,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import org.json.JSONException;
 import org.json.simple.JSONObject;
 
 
-import java.util.Iterator;
-
-import pl.nzi.brewminator.DatabaseHelper;
-import pl.nzi.brewminator.model.Recipe;
+import pl.nzi.brewminator.RecipeDatabaseHelper;
 
 public class RecipesJobService extends JobService {
     private final String TAG = "Recipe Job Service";
-    private DatabaseHelper db;
+    private RecipeDatabaseHelper db;
     private boolean jobCancelled = false;
 
     @Override
@@ -45,7 +40,7 @@ public class RecipesJobService extends JobService {
             @Override
             public void run() {
 
-                db = new DatabaseHelper(getApplicationContext());
+                db = new RecipeDatabaseHelper(getApplicationContext());
 
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 

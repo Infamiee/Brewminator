@@ -3,6 +3,7 @@ package pl.nzi.brewminator;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.HardwarePropertiesManager;
@@ -100,6 +101,7 @@ public class IbuCalculatorActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void calculate(View view){
         try {
             double batchSize = Double.parseDouble(batchSizeEditText.getText().toString());
