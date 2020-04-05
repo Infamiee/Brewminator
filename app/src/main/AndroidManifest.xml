@@ -4,7 +4,6 @@
     package="pl.nzi.brewminator">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -17,6 +16,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="ExtraText">
+        <activity android:name=".SavedRecipesActivity"></activity>
         <activity android:name=".IbuCalculatorActivity" />
         <activity android:name=".RecipeView" />
         <activity android:name=".SearchActivity" />
@@ -32,7 +32,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.RecipesJobService" android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".service.RecipesJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

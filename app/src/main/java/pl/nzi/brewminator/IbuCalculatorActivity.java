@@ -45,7 +45,6 @@ public class IbuCalculatorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(IbuCalculatorActivity.this,HomeActivity.class);
-                startActivity(intent1);
                 finish();
 
             }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
@@ -45,6 +46,7 @@ import pl.nzi.brewminator.model.MASHSTEPS;
 import pl.nzi.brewminator.model.MISC;
 import pl.nzi.brewminator.model.MISCS;
 import pl.nzi.brewminator.model.Recipe;
+import pl.nzi.brewminator.model.RecipeSearch;
 
 public class RecipeView extends AppCompatActivity {
     private final static String TAG = "Recipe View";
@@ -54,11 +56,14 @@ public class RecipeView extends AppCompatActivity {
     Button saveButton;
     ImageView imageView;
     AnimationDrawable animation;
+    boolean isSaved;
+    SavedRecipesDatabaseHelper helper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_layout);
-
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -77,12 +82,11 @@ public class RecipeView extends AppCompatActivity {
             finish();
 
         });
-
-
+        helper = new SavedRecipesDatabaseHelper(this);
         new LoadRecipe().execute();
 
-    }
 
+    }
 
 
     @Override
@@ -106,10 +110,15 @@ public class RecipeView extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @SuppressLint("StaticFieldLeak")
     public class LoadRecipe extends AsyncTask<Void, Void, String> {
-        @Override protected String doInBackground(Void... params) {
+        @Override
+        protected String doInBackground(Void... params) {
             Intent intent = getIntent();
-            int id =  intent.getIntExtra("id",-1);
+            int id = intent.getIntExtra("id", -1);
+            isSaved = helper.isSaved( id);
+            Log.d(TAG, "doInBackground: "+ isSaved);
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
             String url = "http://192.168.1.18:5000/recipe?id=" + String.valueOf(id);
 
@@ -124,14 +133,17 @@ public class RecipeView extends AppCompatActivity {
                                 .create();
                         Log.d(TAG, "onCreate: " + response);
                         recipe = gson.fromJson(response, Recipe.class);
-                        setContentView(R.layout.activity_recipe_view);
-                        if (recipe == null){
+
+                        if (recipe == null) {
                             setContentView(R.layout.couldn_load_recipe);
                             Toolbar toolbar = findViewById(R.id.toolbar);
                             setSupportActionBar(toolbar);
-                        }
+                        } else {
+                            setContentView(R.layout.activity_recipe_view);
 
-                        updateRecipeView();
+
+                            updateRecipeView(id);
+                        }
                     }, error -> {
                 setContentView(R.layout.couldn_load_recipe);
                 Toolbar toolbar = findViewById(R.id.toolbar);
@@ -145,7 +157,8 @@ public class RecipeView extends AppCompatActivity {
             return "xd";
         }
 
-        }
+    }
+
 
     public static View getToolbarLogoIcon(Toolbar toolbar) {
         //check if contentDescription previously was set
@@ -166,12 +179,41 @@ public class RecipeView extends AppCompatActivity {
         return logoIcon;
     }
 
-    private void updateRecipeView() {
+    private void updateRecipeView(int id) {
         setContentView(R.layout.activity_recipe_view);
         brewButton = findViewById(R.id.brew_button);
         brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
         saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show());
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.cropped_logo);
+        if (isSaved) {
+            saveButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_gold, 0, 0);
+
+        } else {
+            saveButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border_black_24dp, 0, 0);
+
+        }
+
+        saveButton.setOnClickListener(click -> {
+            isSaved = !isSaved;
+            if (isSaved) {
+                saveButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_gold, 0, 0);
+                helper.addData(id,recipe.getNAME(),recipe.getSTYLE().getNAME());
+            } else {
+                saveButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_star_border_black_24dp, 0, 0);
+                helper.remove(id);
+            }
+        });
+        View logoView = getToolbarLogoIcon(toolbar);
+        logoView.setOnClickListener(v -> {
+            Intent intent1 = new Intent(RecipeView.this, HomeActivity.class);
+            startActivity(intent1);
+            finish();
+
+        });
 
         updateName();
         updateGravities();
@@ -189,105 +231,105 @@ public class RecipeView extends AppCompatActivity {
         textView.setText(recipe.getNAME());
     }
 
-    private void updateGravities(){
+    private void updateGravities() {
         TextView og = findViewById(R.id.gravities_og_textview);
-        if (!recipe.getOG().trim().isEmpty()){
+        if (!recipe.getOG().trim().isEmpty()) {
             og.setText(recipe.getOG());
-        }else {
+        } else {
             og.setText("N/A");
         }
         TextView fg = findViewById(R.id.gravities_fg_textview);
-        if (!recipe.getOG().trim().isEmpty()){
+        if (!recipe.getOG().trim().isEmpty()) {
             fg.setText(recipe.getFG());
-        }else {
+        } else {
             fg.setText("N/A");
         }
         TextView ibu = findViewById(R.id.gravities_ibu_textview);
-        if (!recipe.getOG().trim().isEmpty()){
+        if (!recipe.getOG().trim().isEmpty()) {
             ibu.setText(recipe.getIBU());
-        }else {
+        } else {
             ibu.setText("N/A");
         }
 
     }
 
-    private void updateStats(){
+    private void updateStats() {
         TextView textView = findViewById(R.id.Type_textView);
         String s = recipe.getTYPE().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.style_textview);
         s = recipe.getSTYLE().getNAME().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.boiltime_textView);
         s = recipe.getBOILTIME().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
 
         textView = findViewById(R.id.preboil_textView);
         s = recipe.getBATCHSIZE().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             Double a = Double.parseDouble(s);
-            textView.setText(String.format("%.2f",a));
-        }else {
+            textView.setText(String.format("%.2f", a));
+        } else {
             textView.setText("N/A");
         }
 
         textView = findViewById(R.id.sizeafter_textView);
         s = recipe.getBOILSIZE().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             Double a = Double.parseDouble(s);
-            textView.setText(String.format("%.2f",a));
-        }else {
+            textView.setText(String.format("%.2f", a));
+        } else {
             textView.setText("N/A");
         }
 
         textView = findViewById(R.id.efficiency_textView);
         s = recipe.getEFFICIENCY().trim();
-        if (!s.isEmpty()){
+        if (!s.isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
 
     }
 
-    private void updateFermentables(){
+    private void updateFermentables() {
 
         List<FERMENTABLE> fermentables = recipe.getFERMENTABLES().getFERMENTABLE();
         TableLayout tableLayout = findViewById(R.id.fermentables_table);
-        for (FERMENTABLE fermentable : recipe.getFERMENTABLES().getFERMENTABLE()){
-            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.fermentables_row,tableLayout,false);
+        for (FERMENTABLE fermentable : recipe.getFERMENTABLES().getFERMENTABLE()) {
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.fermentables_row, tableLayout, false);
             TextView amount = tableRow.findViewById(R.id.fermentables_amount);
             TextView name = tableRow.findViewById(R.id.fermentables_name);
             TextView type = tableRow.findViewById(R.id.fermentables_type);
             String s = fermentable.getAMOUNT();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 Double a = Double.parseDouble(s);
-                amount.setText(String.format("%.2f",a));
-            }else {
+                amount.setText(String.format("%.2f", a));
+            } else {
                 amount.setText("N/A");
             }
             s = fermentable.getNAME();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 name.setText(s.trim());
-            }else {
+            } else {
                 name.setText("N/A");
             }
             s = fermentable.getTYPE();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 type.setText(s.trim());
-            }else {
+            } else {
                 type.setText("N/A");
             }
 
@@ -297,20 +339,20 @@ public class RecipeView extends AppCompatActivity {
 
     }
 
-    private void updateHops(){
+    private void updateHops() {
         List<HOP> hops;
         try {
             hops = recipe.getHOPS().getHOP();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             findViewById(R.id.hops_layout).setVisibility(View.GONE);
             return;
         }
 
         TableLayout tableLayout = findViewById(R.id.hops_table);
 
-        for (HOP hop : hops){
-            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.hops_row,tableLayout,false);
+        for (HOP hop : hops) {
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.hops_row, tableLayout, false);
             TextView amount = tableRow.findViewById(R.id.hops_amount);
             TextView name = tableRow.findViewById(R.id.hops_name);
             TextView type = tableRow.findViewById(R.id.hops_type);
@@ -318,44 +360,44 @@ public class RecipeView extends AppCompatActivity {
             TextView time = tableRow.findViewById(R.id.hops_time);
 
             String s = hop.getAMOUNT();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 Double a = Double.parseDouble(s) * 1000;
-                amount.setText(String.format("%.2f",a)+" g");
-            }else {
+                amount.setText(String.format("%.2f", a) + " g");
+            } else {
                 amount.setText("N/A");
             }
             s = hop.getNAME();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 name.setText(s.trim());
-            }else {
+            } else {
                 name.setText("N/A");
             }
             s = hop.getFORM();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 type.setText(s.trim());
-            }else {
+            } else {
                 type.setText("N/A");
             }
             s = hop.getUSE();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 use.setText(s.trim());
-            }else {
+            } else {
                 use.setText("N/A");
             }
             s = hop.getTIME();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 int t = Integer.parseInt(s);
                 int hours = t / 60;
                 int minutes = t % 60;
-                if (hours==0){
+                if (hours == 0) {
                     time.setText(minutes + " min");
-                }else if(minutes==0) {
-                    time.setText(hours+" h");
-                }else {
-                    time.setText(hours+":"+minutes);
+                } else if (minutes == 0) {
+                    time.setText(hours + " h");
+                } else {
+                    time.setText(hours + ":" + minutes);
                 }
 
-            }else {
+            } else {
                 time.setText("N/A");
             }
 
@@ -365,47 +407,47 @@ public class RecipeView extends AppCompatActivity {
 
     }
 
-    private void updateMashGuidlines(){
+    private void updateMashGuidlines() {
         List<MASHSTEP> mashsteps;
         try {
             mashsteps = recipe.getMASH().getMASHSTEPS().getMASHSTEP();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             findViewById(R.id.mashguid_layout).setVisibility(View.GONE);
             return;
         }
 
         TableLayout tableLayout = findViewById(R.id.mash_table);
 
-        for(MASHSTEP mashstep:mashsteps){
-            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.mash_guidlines_row,tableLayout,false);
+        for (MASHSTEP mashstep : mashsteps) {
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.mash_guidlines_row, tableLayout, false);
             TextView amount = tableRow.findViewById(R.id.mash_amount);
             TextView temp = tableRow.findViewById(R.id.mash_temp);
             TextView type = tableRow.findViewById(R.id.mash_type);
             TextView time = tableRow.findViewById(R.id.mash_time);
             String s = mashstep.getINFUSEAMOUNT();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 Double a = Double.parseDouble(s);
-                amount.setText(String.format("%.2f",a)+" g");
-            }else {
+                amount.setText(String.format("%.2f", a) + " g");
+            } else {
                 amount.setText("N/A");
             }
             s = mashstep.getTYPE();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 type.setText(s.trim());
-            }else {
+            } else {
                 type.setText("N/A");
             }
             s = mashstep.getSTEPTIME();
-            if (s!=null &&  !s.trim().isEmpty()){
+            if (s != null && !s.trim().isEmpty()) {
                 time.setText(s.trim());
-            }else {
+            } else {
                 time.setText("N/A");
             }
             s = mashstep.getSTEPTEMP();
-            if (s!=null &&  !s.trim().isEmpty()){
-                temp.setText(s.substring(0,2));
-            }else {
+            if (s != null && !s.trim().isEmpty()) {
+                temp.setText(s.substring(0, 2));
+            } else {
                 temp.setText("N/A");
             }
 
@@ -416,12 +458,12 @@ public class RecipeView extends AppCompatActivity {
 
     }
 
-    private void updateOtherIngredients(){
+    private void updateOtherIngredients() {
         List<MISC> miscs;
         try {
             miscs = recipe.getMISCS().getMISC();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             findViewById(R.id.misc_layout).setVisibility(View.GONE);
             return;
         }
@@ -429,50 +471,50 @@ public class RecipeView extends AppCompatActivity {
 
         TableLayout tableLayout = findViewById(R.id.misc_table);
 
-        for (MISC misc:miscs){
-            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.misc_row,tableLayout,false);
+        for (MISC misc : miscs) {
+            TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.misc_row, tableLayout, false);
             TextView amount = tableRow.findViewById(R.id.misc_amount);
             TextView name = tableRow.findViewById(R.id.misc_name);
             TextView time = tableRow.findViewById(R.id.misc_time);
             TextView use = tableRow.findViewById(R.id.misc_use);
             String s = misc.getAMOUNT();
-            if (s!=null &&  !s.trim().isEmpty() ){
-                Double a = Double.parseDouble(s)*1000;
-                amount.setText(String.format("%.2f",a)+" g");
-            }else {
+            if (s != null && !s.trim().isEmpty()) {
+                Double a = Double.parseDouble(s) * 1000;
+                amount.setText(String.format("%.2f", a) + " g");
+            } else {
                 amount.setText("N/A");
             }
             s = misc.getNAME();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 name.setText(s);
-            }else {
+            } else {
                 name.setText("N/A");
             }
             s = misc.getNAME();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 name.setText(s);
-            }else {
+            } else {
                 name.setText("N/A");
             }
             s = misc.getTIME();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 int t = Integer.parseInt(s);
                 int hours = t / 60;
                 int minutes = t % 60;
-                if (hours==0){
+                if (hours == 0) {
                     time.setText(minutes + " min");
-                }else if(minutes==0) {
-                    time.setText(hours+" h");
-                }else {
-                    time.setText(hours+":"+minutes);
+                } else if (minutes == 0) {
+                    time.setText(hours + " h");
+                } else {
+                    time.setText(hours + ":" + minutes);
                 }
-            }else {
+            } else {
                 time.setText("N/A");
             }
             s = misc.getUSE();
-            if (s!=null &&  !s.trim().isEmpty() ){
+            if (s != null && !s.trim().isEmpty()) {
                 use.setText(s);
-            }else {
+            } else {
                 use.setText("N/A");
             }
 
@@ -483,61 +525,60 @@ public class RecipeView extends AppCompatActivity {
 
     }
 
-    private void updateYeast(){
+    private void updateYeast() {
         TextView textView = findViewById(R.id.yeastname_textView);
         String s = recipe.getYEASTS().getYEAST().getNAME();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.yeastlaboratory_textView);
         s = recipe.getYEASTS().getYEAST().getLABORATORY();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.yeastype_textView);
         s = recipe.getYEASTS().getYEAST().getTYPE();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.yeastamount_textview);
         s = recipe.getYEASTS().getYEAST().getAMOUNT();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.attenuation_textView);
         s = recipe.getYEASTS().getYEAST().getATTENUATION();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.flocculation_textView);
         s = recipe.getYEASTS().getYEAST().getFLOCCULATION();
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
         textView = findViewById(R.id.optimum_textView);
-        s = recipe.getYEASTS().getYEAST().getMINTEMPERATURE().substring(0,2)+"-"+recipe.getYEASTS().getYEAST().getMAXTEMPERATURE().substring(0,2);
+        s = recipe.getYEASTS().getYEAST().getMINTEMPERATURE().substring(0, 2) + "-" + recipe.getYEASTS().getYEAST().getMAXTEMPERATURE().substring(0, 2);
 
-        if (s!=null &&  !s.trim().isEmpty() ){
+        if (s != null && !s.trim().isEmpty()) {
             textView.setText(s);
-        }else {
+        } else {
             textView.setText("N/A");
         }
 
 
     }
-
 
 
 }

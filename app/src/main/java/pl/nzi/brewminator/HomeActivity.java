@@ -84,6 +84,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -100,6 +101,11 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             case R.id.abvcalculatornav:
                 intent = new Intent(this,AbvCalculatorActivity.class);
+                startActivity(intent);
+                drawerLayout.closeDrawers();
+                return true;
+            case R.id.savednav:
+                intent = new Intent(this,SavedRecipesActivity.class);
                 startActivity(intent);
                 drawerLayout.closeDrawers();
                 return true;

@@ -3,5 +3,6 @@
 
     <item android:id="@+id/ibucalculatornav" android:title="@string/ibucalculator" android:icon="@drawable/calculator"/>
     <item android:id="@+id/abvcalculatornav" android:title="@string/abv_calculator" android:icon="@drawable/calculator"/>
+    <item android:id="@+id/savednav" android:title="Saved Recipes" android:icon="@drawable/ic_bookmark_black_24dp"/>
 
 </menu>
