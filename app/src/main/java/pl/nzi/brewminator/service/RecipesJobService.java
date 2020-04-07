@@ -44,7 +44,7 @@ public class RecipesJobService extends JobService {
 
                 RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
-                String url ="http://192.168.1.18:5000/recipe/all";
+                String url ="https://brewminator-api.herokuapp.com/recipe/all";
 
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         response -> {

@@ -120,7 +120,7 @@ public class RecipeView extends AppCompatActivity {
             isSaved = helper.isSaved( id);
             Log.d(TAG, "doInBackground: "+ isSaved);
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String url = "http://192.168.1.18:5000/recipe?id=" + String.valueOf(id);
+            String url = "https://brewminator-api.herokuapp.com/recipe?id=" + String.valueOf(id);
 
             Log.d(TAG, "onCreate: " + id);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -133,15 +133,13 @@ public class RecipeView extends AppCompatActivity {
                                 .create();
                         Log.d(TAG, "onCreate: " + response);
                         recipe = gson.fromJson(response, Recipe.class);
-
+                        System.out.println(recipe.getClass());
                         if (recipe == null) {
                             setContentView(R.layout.couldn_load_recipe);
                             Toolbar toolbar = findViewById(R.id.toolbar);
                             setSupportActionBar(toolbar);
                         } else {
-                            setContentView(R.layout.activity_recipe_view);
-
-
+                            Log.d(TAG, "doInBackground: " +recipe.getNAME());
                             updateRecipeView(id);
                         }
                     }, error -> {
