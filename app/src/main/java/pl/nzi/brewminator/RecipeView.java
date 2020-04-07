@@ -140,6 +140,7 @@ public class RecipeView extends AppCompatActivity {
                             setSupportActionBar(toolbar);
                         } else {
                             Log.d(TAG, "doInBackground: " +recipe.getNAME());
+
                             updateRecipeView(id);
                         }
                     }, error -> {
