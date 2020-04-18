@@ -20,13 +20,175 @@
 
         <include layout="@layout/toolbar"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/inprogresstext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="70dp"
+                android:fontFamily="serif"
+                android:text="@string/in_progress"
+                android:textColor="#190707"
+                android:textSize="24dp" />
+
+            <Button
+                android:id="@+id/butt1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/inprogresstext"
+                android:layout_marginTop="20dp"
+                android:background="#FBFBEF"
+                android:text="ABV Calculator" />
+
+            <Button
+                android:id="@+id/butt2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/butt1"
+                android:layout_marginTop="10dp"
+                android:background="#FBFBEF"
+                android:text="Ibu calculator" />
+
+            <Button
+                android:id="@+id/butt3"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@+id/butt2"
+                android:layout_marginTop="10dp"
+                android:background="#FBFBEF"
+                android:text="potential active brew 3" />
+
+            <TextView
+                android:id="@+id/savedtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/butt3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="serif"
+                android:text="Saved:"
+                android:textColor="#190707"
+                android:textSize="24dp" />
+
+
+            <HorizontalScrollView
+                android:id="@+id/savedhorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/savedtext">
+
+                <GridLayout
+                    android:id="@+id/savedgrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/savedbutt1"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:backgroundTint="#935924"
+                        android:text="Saved 1" />
+
+                    <Button
+                        android:id="@+id/savedbutt2"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#FCCF6C"
+                        android:text="Saved 2" />
+
+                    <Button
+                        android:id="@+id/savedbutt3"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#F1D413"
+                        android:text="Saved 3" />
+
+                    <Button
+                        android:id="@+id/savedbutt4"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#F89E74"
+                        android:text="Saved 4" />
+
+                </GridLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/recommendedtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/savedhorizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="serif"
+                android:text="Best for beginners:"
+                android:textColor="#190707"
+                android:textSize="24dp" />
+
+            <HorizontalScrollView
+                android:id="@+id/rechorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recommendedtext">
+
+                <GridLayout
+                    android:id="@+id/recgrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/recbutt1"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:backgroundTint="#FBE982"
+                        android:text="Rec 1" />
+
+                    <Button
+                        android:id="@+id/recbutt2"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#F89E74"
+                        android:text="Rec 2" />
+
+                    <Button
+                        android:id="@+id/recbutt3"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#EB550F"
+                        android:text="Rec 3" />
+
+                    <Button
+                        android:id="@+id/recbutt4"
+                        android:layout_width="135dp"
+                        android:layout_height="100dp"
+                        android:layout_marginLeft="1dp"
+                        android:backgroundTint="#FCCF6C"
+                        android:text="Rec 4" />
+
+                </GridLayout>
+            </HorizontalScrollView>
 
 
         </RelativeLayout>
 
-    
-    
+    </RelativeLayout>
+
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
