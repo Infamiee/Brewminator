@@ -64,6 +64,9 @@ public class AbvCalculatorActivity extends AppCompatActivity {
                 }catch (WrongGravitiesException e){
                     result.setText(e.getMessage());
                 }
+                catch (NumberFormatException e){
+                    result.setText("Gravities should be numbers");
+                }
 
 
             }
