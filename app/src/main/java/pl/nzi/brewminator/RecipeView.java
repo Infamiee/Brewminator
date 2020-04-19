@@ -58,7 +58,7 @@ public class RecipeView extends AppCompatActivity {
     AnimationDrawable animation;
     boolean isSaved;
     SavedRecipesDatabaseHelper helper;
-
+    private String recipeString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +140,7 @@ public class RecipeView extends AppCompatActivity {
                             setSupportActionBar(toolbar);
                         } else {
                             Log.d(TAG, "doInBackground: " +recipe.getNAME());
-
+                            recipeString = response;
                             updateRecipeView(id);
                         }
                     }, error -> {
@@ -183,7 +183,7 @@ public class RecipeView extends AppCompatActivity {
         brewButton = findViewById(R.id.brew_button);
         brewButton.setOnClickListener(v-> {
             Intent intent = new Intent(this,BrewTimeLineActivity.class);
-
+            intent.putExtra("recipe",recipeString);
             startActivity(intent);
         });
         saveButton = findViewById(R.id.save_button);

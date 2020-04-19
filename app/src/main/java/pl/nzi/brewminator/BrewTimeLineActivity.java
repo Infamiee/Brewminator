@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,11 +21,25 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.Objects;
+
+import pl.nzi.brewminator.adapter.FermentablesDeserializer;
+import pl.nzi.brewminator.adapter.HopsAdapter;
+import pl.nzi.brewminator.adapter.MashStepsDeserialzier;
+import pl.nzi.brewminator.adapter.MiscAdapter;
+import pl.nzi.brewminator.model.FERMENTABLES;
+import pl.nzi.brewminator.model.HOPS;
+import pl.nzi.brewminator.model.MASHSTEPS;
+import pl.nzi.brewminator.model.MISCS;
+import pl.nzi.brewminator.model.Recipe;
 
 
 public class BrewTimeLineActivity extends AppCompatActivity {
@@ -35,6 +50,11 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     private RelativeLayout progressBar;
     private RelativeLayout timeLineRel;
     private int barHeight;
+    private TextView textView;
+    private int fullTime;
+    private int timeElapsed;
+    private Recipe recipe;
+
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -47,21 +67,64 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setIcon(R.drawable.cropped_logo);
         setupTimeline();
+        Intent intent = getIntent();
+        String recipeString = intent.getStringExtra("recipe");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
+                .registerTypeAdapter(FERMENTABLES.class, new FermentablesDeserializer())
+                .registerTypeAdapter(HOPS.class, new HopsAdapter())
+                .registerTypeAdapter(MISCS.class, new MiscAdapter())
+                .create();
+        Log.d(TAG, "onCreate: " + recipeString);
+        recipe = gson.fromJson(recipeString, Recipe.class);
+        Log.d(TAG, "onCreate: "+recipe.getNAME());
+
+        timeElapsed = 60;
+        fullTime = 5 * 60;
+        textView = findViewById(R.id.timer);
+
         wholeBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 wholeBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                addStepButton(60,1);
-                addStepButton(20,3);
-                addStepButton(91.2f,2);
-                for (int i =0;i<=100;i++){
-                    new UpdateProgressBar().execute((float) i);
-                }
+                addStepButton(60, 1);
+                addStepButton(20, 3);
+                addStepButton(91.2f, 2);
 
             }
         });
 
+        setupTimer(1, 1);
 
+
+    }
+
+    private void setupTimer(int time, int stepId) {
+
+        new CountDownTimer(time * 1000 * 60, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                updateStepTimer(millisUntilFinished/1000);
+                timeElapsed += 1;
+                Log.d(TAG, "onTick: " + timeElapsed);
+                float percent = ((float) timeElapsed / (float) fullTime) * 100;
+                Log.d(TAG, "onTick: " + percent);
+                new UpdateProgressBar().execute(percent);
+
+
+            }
+
+            public void onFinish() {
+                showStep(stepId);
+                textView.setText("done!");
+            }
+        }.start();
+    }
+
+    private void updateStepTimer(long l) {
+        //#TODO
+        //Add Timer
+        textView.setText(String.valueOf( l));
     }
 
     private void setupTimeline() {
@@ -73,24 +136,23 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     }
 
 
-
-
-    private void addStepButton(float percent,int stepId) {
+    private void addStepButton(float percent, int stepId) {
 
         View child = getLayoutInflater().inflate(R.layout.step_timeline, null);
         Button button = child.findViewById(R.id.button);
         button.setOnClickListener(v -> showStep(stepId));
         wholeBar.addView(child);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) child.getLayoutParams();
-        params.setMargins(0,Math.round(wholeBar.getHeight()*percent/100)-5,0,0);
+        params.setMargins(0, Math.round(wholeBar.getHeight() * percent / 100) - 5, 0, 0);
         child.setLayoutParams(params);
-
 
 
     }
 
     private void showStep(int stepId) {
-        Toast.makeText(this,"Clicked step"+stepId,Toast.LENGTH_LONG).show();
+        //TODO
+        //Add showing step
+        Toast.makeText(this, "Clicked step" + stepId, Toast.LENGTH_LONG).show();
     }
 
 
@@ -104,12 +166,9 @@ public class BrewTimeLineActivity extends AppCompatActivity {
                 float pos = height * percent / 100;
                 progressBar.getLayoutParams().height = Math.round(pos);
                 progressBar.requestLayout();
+
             });
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             return null;
         }
     }

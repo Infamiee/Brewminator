@@ -10,12 +10,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/toolbar"
+        android:orientation="horizontal">
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toStartOf="@+id/timeline_layout">
+            android:layout_toLeftOf="@+id/timeline_layout"
+            >
 
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fsdfdsfsdfdsa"/>
 
         </RelativeLayout>
 
@@ -23,7 +30,8 @@
         android:id="@+id/timeline_layout"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        >
 
         <RelativeLayout
             android:id="@+id/timeline_bar"
