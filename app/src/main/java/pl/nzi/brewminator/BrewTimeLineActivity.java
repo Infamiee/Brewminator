@@ -40,6 +40,7 @@ import pl.nzi.brewminator.model.HOPS;
 import pl.nzi.brewminator.model.MASHSTEPS;
 import pl.nzi.brewminator.model.MISCS;
 import pl.nzi.brewminator.model.Recipe;
+import pl.nzi.brewminator.service.RecipeSteps;
 
 
 public class BrewTimeLineActivity extends AppCompatActivity {
@@ -54,6 +55,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     private int fullTime;
     private int timeElapsed;
     private Recipe recipe;
+    private RecipeSteps recipeSteps;
 
 
     @SuppressLint("ResourceAsColor")
@@ -78,7 +80,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: " + recipeString);
         recipe = gson.fromJson(recipeString, Recipe.class);
         Log.d(TAG, "onCreate: "+recipe.getNAME());
-
+        recipeSteps = new RecipeSteps(recipe);
         timeElapsed = 60;
         fullTime = 5 * 60;
         textView = findViewById(R.id.timer);
