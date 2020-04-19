@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="ExtraText">
-        <activity android:name=".SavedRecipesActivity"></activity>
+        <activity android:name=".BrewTimeLineActivity"></activity>
+        <activity android:name=".SavedRecipesActivity" />
         <activity android:name=".IbuCalculatorActivity" />
         <activity android:name=".RecipeView" />
         <activity android:name=".SearchActivity" />

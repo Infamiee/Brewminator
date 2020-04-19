@@ -181,7 +181,11 @@ public class RecipeView extends AppCompatActivity {
     private void updateRecipeView(int id) {
         setContentView(R.layout.activity_recipe_view);
         brewButton = findViewById(R.id.brew_button);
-        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
+        brewButton.setOnClickListener(v-> {
+            Intent intent = new Intent(this,BrewTimeLineActivity.class);
+
+            startActivity(intent);
+        });
         saveButton = findViewById(R.id.save_button);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
