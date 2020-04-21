@@ -12,43 +12,60 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:orientation="horizontal">
-        <RelativeLayout
+        <ScrollView
+            android:id="@+id/timeline_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/timeline_layout"
+            android:layout_toStartOf="@+id/timeline_layout"
+            android:scrollbars="none"
             >
-
-            <TextView
-                android:id="@+id/timer"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="fsdfdsfsdfdsa"/>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/steps_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
 
-        </RelativeLayout>
+            </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/timeline_layout"
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        >
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="1500dp"/>
+            </RelativeLayout>
+        </ScrollView>
 
         <RelativeLayout
-            android:id="@+id/timeline_bar"
-            android:layout_width="@dimen/activity_vertical_margin"
+            android:id="@+id/timeline_layout"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/borders">
+            android:layout_alignParentEnd="true">
 
             <RelativeLayout
-                android:id="@+id/progress_bar"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/rounded_filled_timeline" />
+                android:id="@+id/timeline_bar"
+                android:layout_width="@dimen/activity_vertical_margin"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/borders">
+
+                <RelativeLayout
+                    android:id="@+id/progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@drawable/rounded_filled_timeline" />
+
+
+            </RelativeLayout>
 
         </RelativeLayout>
-    </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
