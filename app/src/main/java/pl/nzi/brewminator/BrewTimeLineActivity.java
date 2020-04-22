@@ -1,26 +1,27 @@
 package pl.nzi.brewminator;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -28,15 +29,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.digidemic.unitof.S;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import pl.nzi.brewminator.adapter.FermentablesDeserializer;
 import pl.nzi.brewminator.adapter.HopsAdapter;
@@ -61,6 +60,10 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     List<Step> steps;
     private LinearLayout stepsLayout;
     private Step activeStep;
+    private Recipe recipe;
+    private int nextStepSound, finishSound;
+
+    private SoundPool soundPool;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -81,19 +84,38 @@ public class BrewTimeLineActivity extends AppCompatActivity {
                 .registerTypeAdapter(HOPS.class, new HopsAdapter())
                 .registerTypeAdapter(MISCS.class, new MiscAdapter())
                 .create();
-        Recipe recipe = gson.fromJson(recipeString, Recipe.class);
+        recipe = gson.fromJson(recipeString, Recipe.class);
         RecipeSteps recipeSteps = new RecipeSteps(recipe);
         stepsLayout = findViewById(R.id.steps_view);
         steps = recipeSteps.getSteps();
         fullTime = 0;
         for (Step s : steps) {
-            fullTime += s.getTime() * 60;
+            if (s.getStep()!= RecipeSteps.STEP.FERMENT) {
+                fullTime += s.getTime() * 60;
+            }
             addStepsLayout(s);
             setupTime(s);
         }
         setupStepsButtons();
 
         setupActiveStep(steps.get(0));
+
+        setupSoundPool();
+
+    }
+
+    private void setupSoundPool() {
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(6)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        finishSound = soundPool.load(this, R.raw.finish_sound, 1);
     }
 
     private void setupActiveStep(Step step) {
@@ -108,7 +130,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         button.setVisibility(View.VISIBLE);
         button.setText("OK!");
         button.setOnClickListener(v -> {
-            if (step.getTime() > 0) {
+            if (step.getTime() > 0 && step.getStep()!= RecipeSteps.STEP.FERMENT) {
                 step.getTimer().start();
                 button.setText("Skip!");
                 button.setOnClickListener(v1 -> nextStep());
@@ -116,30 +138,59 @@ public class BrewTimeLineActivity extends AppCompatActivity {
                 changeActiveStep();
             }
         });
-
-
-    }
-
-    private void nextStep() {
-        Step step = activeStep;
-        step.getTimer().cancel();
-        step.getView().findViewById(R.id.step_timer).setVisibility(View.GONE);
-        int t = 0;
-        for (Step s:steps) {
-            if (s == step){
-                t+=s.getTime();
-                this.timeElapsed=t*60;
-                float percent = ((float) timeElapsed/(float) fullTime)*100;
-                new UpdateProgressBar().execute(percent);
-                Log.d(TAG, "skipStep: "+timeElapsed);
-                changeActiveStep();
-            }
-            t+=s.getTime();
+        if (step.getStep()== RecipeSteps.STEP.FERMENT){
+            Button calendarButton = activeStep.getView().findViewById(R.id.callendar_button);
+            calendarButton.setOnClickListener(v -> setCalendar(step.getTime(),recipe.getNAME()));
+            calendarButton.setVisibility(View.VISIBLE);
         }
 
 
     }
 
+    private void setCalendar(int time,String name) {
+        Calendar cal = Calendar.getInstance();
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra("beginTime", cal.getTimeInMillis()+time*60*60*1000);
+        intent.putExtra("allDay", false);
+        intent.putExtra("title", "Take out hops from "+name+" beer brewing");
+        startActivity(intent);
+    }
+
+    private void nextStep() {
+        vibrate(0.5f);
+        Step step = activeStep;
+        step.getTimer().cancel();
+        step.getView().findViewById(R.id.step_timer).setVisibility(View.GONE);
+        int t = 0;
+        for (Step s : steps) {
+            if (s == step) {
+                t += s.getTime();
+                this.timeElapsed = t * 60;
+                float percent = ((float) timeElapsed / (float) fullTime) * 100;
+                new UpdateProgressBar().execute(percent);
+                Log.d(TAG, "skipStep: " + timeElapsed);
+                changeActiveStep();
+            }
+            t += s.getTime();
+        }
+
+
+    }
+
+    private void vibrate(float s) {
+        final long[] pattern = {0, Math.round(s * 1000)};
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        assert vibrator != null;
+        vibrator.vibrate(pattern, -1);
+
+    }
+
+    private void playSound(int sound) {
+
+        soundPool.play(sound, 1, 1, 0, 0, 1);
+
+    }
 
 
     private void setupTime(Step step) {
@@ -162,7 +213,6 @@ public class BrewTimeLineActivity extends AppCompatActivity {
                             nextStep();
 
                         }
-
 
                     });
         }
@@ -201,6 +251,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         Step oldStep = activeStep;
         oldStep.getView().findViewById(R.id.step_layout).setBackgroundResource(R.drawable.ended_step);
         oldStep.getView().findViewById(R.id.step_button).setVisibility(View.GONE);
+        oldStep.getView().findViewById(R.id.callendar_button).setVisibility(View.GONE);
         try {
             setupActiveStep(steps.get(steps.indexOf(oldStep) + 1));
         } catch (IndexOutOfBoundsException e) {
@@ -209,8 +260,30 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     }
 
     private void finishBrewing() {
-        //TODO
-        Toast.makeText(this, "Finishing", Toast.LENGTH_LONG).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        View dialogView = getLayoutInflater().inflate(R.layout.finish_brewing_dialog, null);
+        ImageView anim = dialogView.findViewById(R.id.finish_anim);
+        AnimationDrawable animation;
+        anim.setBackgroundResource(R.drawable.loading);
+        animation = (AnimationDrawable) anim.getBackground();
+        animation.start();
+
+        Button returnButton = dialogView.findViewById(R.id.return_button);
+
+        Button commentButton = dialogView.findViewById(R.id.comment_button);
+        commentButton.setOnClickListener(v -> Toast.makeText(this, "Comment recipe", Toast.LENGTH_SHORT).show());
+        builder.setView(dialogView);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        returnButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+            alertDialog.dismiss();
+
+        });
+        playSound(finishSound);
     }
 
     private void addStepsLayout(Step step) {
@@ -218,10 +291,11 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         View child = getLayoutInflater().inflate(R.layout.timeline_step_layout, null);
         LinearLayout message = child.findViewById(R.id.addition_layout);
         TextView timer = child.findViewById(R.id.step_timer);
-        Button button = child.findViewById(R.id.step_button);
         message.addView(addtionLayout(step.getMessage()));
-        for (String addtition : step.getAdditions()) {
-            message.addView(addtionLayout(addtition));
+        if (step.getAdditions() != null) {
+            for (String addtition : step.getAdditions()) {
+                message.addView(addtionLayout(addtition));
+            }
         }
         stepsLayout.addView(child);
         if (step.getTime() == 0) {
@@ -333,6 +407,13 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         if (hadContentDescription)
             toolbar.setLogoDescription(null);
         return logoIcon;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundPool.release();
+        soundPool = null;
     }
 
 }

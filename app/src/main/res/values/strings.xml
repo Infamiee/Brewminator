@@ -29,5 +29,6 @@
     <string name="save">Save</string>
     <string name="stats">Stats</string>
     <string name="recipe_not_found">Recipe not found</string>
+    <string name="add_reminder">Add reminder</string>
 
 </resources>

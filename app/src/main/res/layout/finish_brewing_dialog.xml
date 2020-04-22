@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    >
+    <ImageView
+        android:layout_margin="30dp"
+        android:id="@+id/finish_anim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxWidth="200dp"
+        android:scaleType="center"
+        android:layout_gravity="center"
+        />
+    <Button
+        android:id="@+id/comment_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="17sp"
+
+        android:padding="5dp"
+        android:text="Leave your comment"
+        android:fontFamily="@font/fjalla_one"
+        />
+
+    <Button
+        android:id="@+id/return_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="17sp"
+        android:text="Return"
+        android:padding="5dp"
+        android:fontFamily="@font/fjalla_one"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        />
+
+
+</LinearLayout>
