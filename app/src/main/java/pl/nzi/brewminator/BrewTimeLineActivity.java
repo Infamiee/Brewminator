@@ -138,7 +138,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
                 changeActiveStep();
             }
         });
-        if (step.getStep()== RecipeSteps.STEP.FERMENT){
+        if (step.getStep()== RecipeSteps.STEP.FERMENT && step.getTime()>0){
             Button calendarButton = activeStep.getView().findViewById(R.id.callendar_button);
             calendarButton.setOnClickListener(v -> setCalendar(step.getTime(),recipe.getNAME()));
             calendarButton.setVisibility(View.VISIBLE);

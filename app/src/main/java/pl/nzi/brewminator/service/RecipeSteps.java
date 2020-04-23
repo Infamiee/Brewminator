@@ -137,7 +137,7 @@ public class RecipeSteps {
     private void setupFermentables() {
         List<FERMENTABLE> fermentables = recipe.getFERMENTABLES().getFERMENTABLE();
         List<String> additions = new ArrayList<>();
-        String message = "Prepare starter:";
+        String message = "Prepare:";
         for (FERMENTABLE fermentable : fermentables) {
             double amount = Double.parseDouble(fermentable.getAMOUNT());
             String addition = fermentable.getNAME() + ": " + String.format("%.2f", amount) + " kg";
@@ -157,7 +157,7 @@ public class RecipeSteps {
     private void setupPrepareYeast() {
         List<String> addition = new ArrayList<>();
         YEAST yeast = recipe.getYEASTS().getYEAST();
-        String message = "Prepare";
+        String message = "Prepare starter";
         addition.add(yeast.getNAME());
         addition.add(yeast.getLABORATORY());
         addition.add(yeast.getTYPE());
