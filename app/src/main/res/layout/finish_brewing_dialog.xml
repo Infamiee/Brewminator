@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     >
     <ImageView
-        android:layout_margin="30dp"
+
         android:id="@+id/finish_anim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxWidth="200dp"
-        android:scaleType="center"
+        android:maxHeight="100dp"
+        android:scaleType="centerCrop"
         android:layout_gravity="center"
         />
     <Button

@@ -106,8 +106,8 @@ public class BrewTimeLineActivity extends AppCompatActivity {
 
     private void setupSoundPool() {
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
 
         soundPool = new SoundPool.Builder()
@@ -265,7 +265,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.finish_brewing_dialog, null);
         ImageView anim = dialogView.findViewById(R.id.finish_anim);
         AnimationDrawable animation;
-        anim.setBackgroundResource(R.drawable.loading);
+        anim.setBackgroundResource(R.drawable.finish_anim);
         animation = (AnimationDrawable) anim.getBackground();
         animation.start();
 
