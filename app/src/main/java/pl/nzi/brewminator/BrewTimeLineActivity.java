@@ -151,7 +151,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         Intent intent = new Intent(Intent.ACTION_EDIT);
         intent.setType("vnd.android.cursor.item/event");
-        intent.putExtra("beginTime", cal.getTimeInMillis()+time*60*60*1000);
+        intent.putExtra("beginTime", cal.getTimeInMillis()+time*60*1000);
         intent.putExtra("allDay", false);
         intent.putExtra("title", "Take out hops from "+name+" beer brewing");
         startActivity(intent);
