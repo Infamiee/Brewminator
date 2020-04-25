@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="pl.nzi.brewminator">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="ExtraText">
-        <activity android:name=".BrewTimeLineActivity"></activity>
+        <activity android:name=".FeedbackActivity"></activity>
+        <activity android:name=".BrewTimeLineActivity" />
         <activity android:name=".SavedRecipesActivity" />
         <activity android:name=".IbuCalculatorActivity" />
         <activity android:name=".RecipeView" />

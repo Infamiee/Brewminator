@@ -62,7 +62,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
     private Step activeStep;
     private Recipe recipe;
     private int nextStepSound, finishSound;
-
+    private int recipeId;
     private SoundPool soundPool;
 
     @SuppressLint("ResourceAsColor")
@@ -78,6 +78,7 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         setupTimeline();
         Intent intent = getIntent();
         String recipeString = intent.getStringExtra("recipe");
+        recipeId = intent.getIntExtra("id",-1);
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
                 .registerTypeAdapter(FERMENTABLES.class, new FermentablesDeserializer())
@@ -129,6 +130,10 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         Button button = activeStep.getView().findViewById(R.id.step_button);
         button.setVisibility(View.VISIBLE);
         button.setText("OK!");
+        if (activeStep.getTime()>0 && step.getStep()!= RecipeSteps.STEP.FERMENT){
+            button.setText("Start Timer!");
+        }
+
         button.setOnClickListener(v -> {
             if (step.getTime() > 0 && step.getStep()!= RecipeSteps.STEP.FERMENT) {
                 step.getTimer().start();
@@ -272,7 +277,12 @@ public class BrewTimeLineActivity extends AppCompatActivity {
         Button returnButton = dialogView.findViewById(R.id.return_button);
 
         Button commentButton = dialogView.findViewById(R.id.comment_button);
-        commentButton.setOnClickListener(v -> Toast.makeText(this, "Comment recipe", Toast.LENGTH_SHORT).show());
+        commentButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this,FeedbackActivity.class);
+            intent.putExtra("id",recipeId);
+            startActivity(intent);
+            finish();
+        });
         builder.setView(dialogView);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();

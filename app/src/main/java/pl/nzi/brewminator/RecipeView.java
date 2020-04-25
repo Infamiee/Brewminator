@@ -59,6 +59,8 @@ public class RecipeView extends AppCompatActivity {
     boolean isSaved;
     SavedRecipesDatabaseHelper helper;
     private String recipeString;
+    ImageButton commentButton;
+    int recipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class RecipeView extends AppCompatActivity {
         });
         helper = new SavedRecipesDatabaseHelper(this);
         new LoadRecipe().execute();
+
 
 
     }
@@ -117,6 +120,7 @@ public class RecipeView extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             Intent intent = getIntent();
             int id = intent.getIntExtra("id", -1);
+            recipeId = id;
             isSaved = helper.isSaved( id);
             Log.d(TAG, "doInBackground: "+ isSaved);
             RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
@@ -180,10 +184,17 @@ public class RecipeView extends AppCompatActivity {
 
     private void updateRecipeView(int id) {
         setContentView(R.layout.activity_recipe_view);
+        commentButton = findViewById(R.id.comment_button);
+        commentButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this,FeedbackActivity.class);
+            intent.putExtra("id",recipeId);
+            startActivity(intent);
+        });
         brewButton = findViewById(R.id.brew_button);
         brewButton.setOnClickListener(v-> {
             Intent intent = new Intent(this,BrewTimeLineActivity.class);
             intent.putExtra("recipe",recipeString);
+            intent.putExtra("id",recipeId);
             startActivity(intent);
         });
         saveButton = findViewById(R.id.save_button);
