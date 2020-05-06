@@ -19,6 +19,9 @@ public class RecipesJobService extends JobService {
     private final String TAG = "Recipe Job Service";
     private RecipeDatabaseHelper db;
     private boolean jobCancelled = false;
+    private ApiConnector connector;
+
+
 
     @Override
     public boolean onStartJob(JobParameters params) {
@@ -42,11 +45,8 @@ public class RecipesJobService extends JobService {
 
                 db = new RecipeDatabaseHelper(getApplicationContext());
 
-                RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-
-                String url ="https://brewminator-api.herokuapp.com/recipe/all";
-
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                connector = new ApiConnector(getApplicationContext());
+                connector.get("/recipe/all",null,Request.Method.GET,
                         response -> {
                             JSONObject jsonObject;
                             Gson gson = new Gson();
@@ -57,7 +57,6 @@ public class RecipesJobService extends JobService {
                     Log.d(TAG,"FAILED");
                     jobFinished(params,true);
                 });
-                queue.add(stringRequest);
                 Log.d(TAG,"Job finished");
                 jobFinished(params,false);
             }

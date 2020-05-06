@@ -4,40 +4,43 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.digidemic.unitof.G;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.simple.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,19 +48,22 @@ import java.util.Map;
 
 import pl.nzi.brewminator.model.Comment;
 import pl.nzi.brewminator.model.Comments;
+import pl.nzi.brewminator.model.Note;
+import pl.nzi.brewminator.service.ApiConnector;
 
 public class FeedbackActivity extends AppCompatActivity {
     private static final String TAG = "Feedback";
-    private static final String URL = "https://brewminator-api.herokuapp.com/comment";
+
     private int recipeId;
     private Comments comments;
     private String macAddress;
     private View dialogView;
     private AnimationDrawable loadingAnimation;
     private AlertDialog alertDialog;
-    private RequestQueue queue;
     boolean alreadyCommented;
+    private ApiConnector connector;
     List<String> names;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +73,13 @@ public class FeedbackActivity extends AppCompatActivity {
         Intent intent = getIntent();
         recipeId = intent.getIntExtra("id", -1);
         startLoadingAnim();
-        queue = Volley.newRequestQueue(getApplicationContext());
         names = new ArrayList<>();
         WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         macAddress = info.getMacAddress();
+        connector = new ApiConnector(this);
         new LoadComments().execute(recipeId);
+
     }
 
     private void startLoadingAnim() {
@@ -123,10 +130,11 @@ public class FeedbackActivity extends AppCompatActivity {
         ImageButton addButton = dialogView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v -> {
             String commenttext = commentEditText.getText().toString();
-            if ( commenttext.trim().isEmpty()){
-                Toast.makeText(getApplicationContext(),"Couldn't be empty",Toast.LENGTH_LONG).show();
+            if (commenttext.trim().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Couldn't be empty", Toast.LENGTH_LONG).show();
                 return;
             }
+
             new EditComment(comment).execute(commenttext);
         });
         ImageButton imageButton = dialogView.findViewById(R.id.close_button);
@@ -136,9 +144,30 @@ public class FeedbackActivity extends AppCompatActivity {
 
     private void setupView() {
         setContentView(R.layout.activity_feedback);
+        new GetNotes().execute();
         setupToolbar();
         ImageButton addButton = findViewById(R.id.add_button);
         addButton.setOnClickListener(v -> addCommentDialog());
+    }
+
+    private void setRating(float rating) {
+
+        TextView r = findViewById(R.id.note_textview);
+        r.setText(String.format("%.1f",rating));
+        ImageView image = findViewById(R.id.cropped_finnish);
+        if (rating == 0) {
+            image.setImageResource(0);
+            return;
+        }
+        Bitmap btm = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.finish_load_150px);
+        int height = btm.getHeight();
+        int h = Math.round((float) height * rating / 10);
+        Log.d(TAG, "setRating: "+rating);
+        Bitmap newBitmap = Bitmap.createBitmap(btm, 0, height - h, btm.getWidth(), h, null, false);
+
+
+        image.setImageBitmap(newBitmap);
     }
 
     private void addCommentDialog() {
@@ -156,7 +185,7 @@ public class FeedbackActivity extends AppCompatActivity {
         EditText nameEditText = dialogView.findViewById(R.id.name_edittext);
 
         EditText commentEditText = dialogView.findViewById(R.id.comment_edittext);
-
+        Spinner spinner = dialogView.findViewById(R.id.spinner);
 
         builder.setView(dialogView);
         alertDialog = builder.create();
@@ -165,12 +194,16 @@ public class FeedbackActivity extends AppCompatActivity {
         addButton.setOnClickListener(v -> {
             String name = nameEditText.getText().toString();
             String comment = commentEditText.getText().toString();
-            if (name.trim().isEmpty() || comment.trim().isEmpty()){
-                Toast.makeText(getApplicationContext(),"Couldn't be empty",Toast.LENGTH_LONG).show();
+            String selected = spinner.getSelectedItem().toString();
+            if (!selected.equals("----")) {
+                new SendNote().execute(Integer.parseInt(selected));
+            }
+            if (name.trim().isEmpty() || comment.trim().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Couldn't be empty", Toast.LENGTH_LONG).show();
                 return;
             }
-            if (names.contains(name.trim())){
-                Toast.makeText(this,"Someone else picked that name",Toast.LENGTH_LONG).show();
+            if (names.contains(name.trim())) {
+                Toast.makeText(this, "Someone else picked that name", Toast.LENGTH_LONG).show();
                 return;
             }
             new AddComment().execute(name, comment);
@@ -227,16 +260,15 @@ public class FeedbackActivity extends AppCompatActivity {
         protected Void doInBackground(Integer... integers) {
 
             int id = integers[0];
-            String url = URL + "/" + String.valueOf(id);
 
-            StringRequest request = new StringRequest(Request.Method.GET, url, response -> {
+
+            connector.get("/comment/" + String.valueOf(recipeId), null, Request.Method.GET, response -> {
                 setupView();
 
                 Gson gson = new Gson();
                 try {
                     comments = gson.fromJson(response, Comments.class);
                     List<Comment> commentList = comments.getComments();
-                    Log.d(TAG, "doInBackground: " + response);
                     for (Comment comment : commentList) {
                         if (comment.getMacAddress().equals(macAddress)) {
                             alreadyCommented = true;
@@ -251,7 +283,7 @@ public class FeedbackActivity extends AppCompatActivity {
             }, error -> {
                 Log.d(TAG, "doInBackground: error " + error.getMessage());
             });
-            queue.add(request);
+
             return null;
         }
 
@@ -278,6 +310,50 @@ public class FeedbackActivity extends AppCompatActivity {
         }
     }
 
+    class GetNotes extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... floats) {
+            connector.get("/note/" + recipeId, null, Request.Method.GET, response ->
+                    {
+
+
+                        Gson gson = new Gson();
+                        Note note = gson.fromJson(response, Note.class);
+                        Log.d(TAG, "doInBackground: "+note.getNote());
+                        setRating(note.getNote());
+                    },
+
+                    error -> {
+                        Toast.makeText(FeedbackActivity.this, "Couldn't load note", Toast.LENGTH_LONG).show();
+                    });
+            return null;
+        }
+
+    }
+
+    class SendNote extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            int note = integers[0];
+            JSONObject body = new JSONObject();
+            body.put("note", note);
+            body.put("mac", macAddress);
+            body.put("recipe_id", recipeId);
+            connector.get("/note", body, Request.Method.POST, response ->
+                    {
+                        new GetNotes().execute();
+                    },
+
+                    error -> {
+                        Toast.makeText(FeedbackActivity.this, "Couldn't send note", Toast.LENGTH_LONG).show();
+                    });
+            return null;
+        }
+
+    }
+
     class AddComment extends AsyncTask<String, Void, Boolean> {
 
         @Override
@@ -300,8 +376,8 @@ public class FeedbackActivity extends AppCompatActivity {
             bodyObj.put("recipe_id", recipeId);
             bodyObj.put("mac", macAddress);
 
-            final String body = bodyObj.toString();
-            StringRequest request = new StringRequest(Request.Method.POST, URL, response -> {
+
+            connector.get("/comment", bodyObj, Request.Method.POST, response -> {
                 runOnUiThread(() ->
                 {
                     ImageView anim = dialogView.findViewById(R.id.anim);
@@ -315,38 +391,25 @@ public class FeedbackActivity extends AppCompatActivity {
 
 
             }, error -> {
-                runOnUiThread(() ->
-                {
-                    ImageView anim = dialogView.findViewById(R.id.anim);
-                    loadingAnimation.stop();
-                    anim.setVisibility(View.INVISIBLE);
-                    alertDialog.dismiss();
-                });
+
 
                 Toast.makeText(FeedbackActivity.this, "Couldn't add comment", Toast.LENGTH_LONG).show();
-            }) {
+            });
 
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return body.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                body, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            queue.add(request);
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            runOnUiThread(() ->
+            {
+                ImageView anim = dialogView.findViewById(R.id.anim);
+                loadingAnimation.stop();
+                anim.setVisibility(View.INVISIBLE);
+                alertDialog.dismiss();
+            });
         }
     }
 
@@ -362,45 +425,43 @@ public class FeedbackActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             JSONObject bodyObj = new JSONObject();
-            Log.d(TAG, "doInBackground:"+comment.getId()+"   "+macAddress);
+            Log.d(TAG, "doInBackground:" + comment.getId() + "   " + macAddress);
             bodyObj.put("comment_id", comment.getId());
             bodyObj.put("mac", macAddress);
 
-            final String body = bodyObj.toString();
-            StringRequest request = new StringRequest(Request.Method.PATCH, URL, response -> {
+
+            connector.get("/comment", bodyObj, Request.Method.PATCH, response -> {
                 LinearLayout layout = findViewById(R.id.comment_layout);
                 layout.removeView(comment.getView());
                 Toast.makeText(FeedbackActivity.this, "Deleted", Toast.LENGTH_LONG).show();
                 alreadyCommented = false;
+                new DeleteNote().execute();
             }, error -> {
 
 
                 Toast.makeText(FeedbackActivity.this, "Couldn't delete comment", Toast.LENGTH_LONG).show();
-            }) {
-
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return body.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                body, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            queue.add(request);
+            });
             return null;
         }
 
 
+    }
+
+    class DeleteNote extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            JSONObject body = new JSONObject();
+            body.put("recipe_id", recipeId);
+            body.put("mac", macAddress);
+            connector.get("/note", body, Request.Method.PATCH, response -> {
+                        setRating(getNote(response).getNote());
+                    },
+                    error -> {
+                        Toast.makeText(FeedbackActivity.this, "Couldn't delete note", Toast.LENGTH_LONG).show();
+                    });
+            return null;
+        }
     }
 
     class EditComment extends AsyncTask<String, Void, Void> {
@@ -424,22 +485,29 @@ public class FeedbackActivity extends AppCompatActivity {
 
             String commenttext = strings[0];
             JSONObject bodyObj = new JSONObject();
-            Log.d(TAG, "doInBackground:"+comment.getId()+"   "+macAddress);
+            Log.d(TAG, "doInBackground:" + comment.getId() + "   " + macAddress);
             bodyObj.put("comment", commenttext);
             bodyObj.put("comment_id", comment.getId());
             bodyObj.put("mac", macAddress);
 
-            final String body = bodyObj.toString();
-            String url  = URL+"/edit";
-            StringRequest request = new StringRequest(Request.Method.PATCH, url, response -> {
+            connector.get("/comment/edit", bodyObj, Request.Method.PATCH, response -> {
                 runOnUiThread(() ->
                 {
                     ImageView anim = dialogView.findViewById(R.id.anim);
                     loadingAnimation.stop();
                     anim.setVisibility(View.INVISIBLE);
+
+                    Spinner spinner = alertDialog.findViewById(R.id.spinner);
+                    String note = spinner.getSelectedItem().toString();
+                    if (!note.equals("----")) {
+                        new EditNote().execute(Integer.parseInt(note));
+
+                    }
                     alertDialog.dismiss();
                     TextView view = this.comment.getView().findViewById(R.id.comment_textview);
                     view.setText(commenttext);
+
+
                 });
 
             }, error -> {
@@ -451,30 +519,37 @@ public class FeedbackActivity extends AppCompatActivity {
                 });
 
                 Toast.makeText(FeedbackActivity.this, "Couldn't edit comment", Toast.LENGTH_LONG).show();
-            }) {
+            });
 
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    return headers;
-                }
-
-                @Override
-                public byte[] getBody() {
-                    try {
-                        return body.getBytes("utf-8");
-                    } catch (UnsupportedEncodingException uee) {
-                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                                body, "utf-8");
-                        return null;
-                    }
-                }
-            };
-            queue.add(request);
 
             return null;
         }
+
+    }
+
+    class EditNote extends AsyncTask<Integer, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            int note = integers[0];
+            JSONObject body = new JSONObject();
+            body.put("recipe_id", recipeId);
+            body.put("mac", macAddress);
+            body.put("note", note);
+            connector.get("/note", body, Request.Method.PUT, response -> {
+                setRating(getNote(response).getNote());
+            }, error ->
+                    Toast.makeText(FeedbackActivity.this, "Couldn't edit note", Toast.LENGTH_LONG).show());
+            return null;
+        }
+
+    }
+
+    private Note getNote(String response){
+        Gson gson = new Gson();
+        Note note = gson.fromJson(response,Note.class);
+        return note;
     }
 
 

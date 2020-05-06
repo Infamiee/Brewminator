@@ -15,11 +15,61 @@
             android:id="@+id/comment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                >
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/start_load_150px"
+                    android:layout_centerHorizontal="true"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true">
+                    <ImageView
+                        android:id="@+id/cropped_finnish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentBottom="true"
+
+                    />
+                </RelativeLayout>
+                    <TextView
+                        android:id="@+id/note_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:paddingEnd="35dp"
+                        android:textSize="25sp"
+                        android:textColor="@color/black"
+                        android:fontFamily="serif"
+                        android:textStyle="bold"
+                        android:layout_marginTop="5dp"
+                        tools:ignore="RtlSymmetry"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+
 
 
         </LinearLayout>
+
+
     </ScrollView>
 
     <ImageButton

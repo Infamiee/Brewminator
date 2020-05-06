@@ -47,6 +47,7 @@ import pl.nzi.brewminator.model.MISC;
 import pl.nzi.brewminator.model.MISCS;
 import pl.nzi.brewminator.model.Recipe;
 import pl.nzi.brewminator.model.RecipeSearch;
+import pl.nzi.brewminator.service.ApiConnector;
 
 public class RecipeView extends AppCompatActivity {
     private final static String TAG = "Recipe View";
@@ -61,6 +62,7 @@ public class RecipeView extends AppCompatActivity {
     private String recipeString;
     ImageButton commentButton;
     int recipeId;
+    private ApiConnector connector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class RecipeView extends AppCompatActivity {
 
         });
         helper = new SavedRecipesDatabaseHelper(this);
+        connector = new ApiConnector(this);
         new LoadRecipe().execute();
 
 
@@ -115,19 +118,17 @@ public class RecipeView extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class LoadRecipe extends AsyncTask<Void, Void, String> {
+    public class LoadRecipe extends AsyncTask<Void, Void, Void> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             Intent intent = getIntent();
             int id = intent.getIntExtra("id", -1);
             recipeId = id;
             isSaved = helper.isSaved( id);
             Log.d(TAG, "doInBackground: "+ isSaved);
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String url = "https://brewminator-api.herokuapp.com/recipe?id=" + String.valueOf(id);
 
             Log.d(TAG, "onCreate: " + id);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+            connector.get("/recipe/"+String.valueOf(recipeId),null,Request.Method.GET,
                     response -> {
                         Gson gson = new GsonBuilder()
                                 .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
@@ -156,8 +157,8 @@ public class RecipeView extends AppCompatActivity {
                 getSupportActionBar().setIcon(R.drawable.cropped_logo);
             });
 
-            queue.add(stringRequest);
-            return "xd";
+
+            return null;
         }
 
     }
