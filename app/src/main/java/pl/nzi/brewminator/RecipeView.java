@@ -47,6 +47,7 @@ import pl.nzi.brewminator.model.MISC;
 import pl.nzi.brewminator.model.MISCS;
 import pl.nzi.brewminator.model.Recipe;
 import pl.nzi.brewminator.model.RecipeSearch;
+import pl.nzi.brewminator.service.ApiConnector;
 
 public class RecipeView extends AppCompatActivity {
     private final static String TAG = "Recipe View";
@@ -58,7 +59,10 @@ public class RecipeView extends AppCompatActivity {
     AnimationDrawable animation;
     boolean isSaved;
     SavedRecipesDatabaseHelper helper;
-
+    private String recipeString;
+    ImageButton commentButton;
+    int recipeId;
+    private ApiConnector connector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +87,9 @@ public class RecipeView extends AppCompatActivity {
 
         });
         helper = new SavedRecipesDatabaseHelper(this);
+        connector = new ApiConnector(this);
         new LoadRecipe().execute();
+
 
 
     }
@@ -112,18 +118,17 @@ public class RecipeView extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public class LoadRecipe extends AsyncTask<Void, Void, String> {
+    public class LoadRecipe extends AsyncTask<Void, Void, Void> {
         @Override
-        protected String doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             Intent intent = getIntent();
             int id = intent.getIntExtra("id", -1);
+            recipeId = id;
             isSaved = helper.isSaved( id);
             Log.d(TAG, "doInBackground: "+ isSaved);
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String url = "https://brewminator-api.herokuapp.com/recipe?id=" + String.valueOf(id);
 
             Log.d(TAG, "onCreate: " + id);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+            connector.get("/recipe/"+String.valueOf(recipeId),null,Request.Method.GET,
                     response -> {
                         Gson gson = new GsonBuilder()
                                 .registerTypeAdapter(MASHSTEPS.class, new MashStepsDeserialzier())
@@ -140,6 +145,7 @@ public class RecipeView extends AppCompatActivity {
                             setSupportActionBar(toolbar);
                         } else {
                             Log.d(TAG, "doInBackground: " +recipe.getNAME());
+                            recipeString = response;
                             updateRecipeView(id);
                         }
                     }, error -> {
@@ -151,8 +157,8 @@ public class RecipeView extends AppCompatActivity {
                 getSupportActionBar().setIcon(R.drawable.cropped_logo);
             });
 
-            queue.add(stringRequest);
-            return "xd";
+
+            return null;
         }
 
     }
@@ -179,8 +185,19 @@ public class RecipeView extends AppCompatActivity {
 
     private void updateRecipeView(int id) {
         setContentView(R.layout.activity_recipe_view);
+        commentButton = findViewById(R.id.comment_button);
+        commentButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this,FeedbackActivity.class);
+            intent.putExtra("id",recipeId);
+            startActivity(intent);
+        });
         brewButton = findViewById(R.id.brew_button);
-        brewButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "Start brewing", Toast.LENGTH_LONG).show());
+        brewButton.setOnClickListener(v-> {
+            Intent intent = new Intent(this,BrewTimeLineActivity.class);
+            intent.putExtra("recipe",recipeString);
+            intent.putExtra("id",recipeId);
+            startActivity(intent);
+        });
         saveButton = findViewById(R.id.save_button);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

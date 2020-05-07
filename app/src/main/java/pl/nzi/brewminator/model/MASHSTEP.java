@@ -11,7 +11,7 @@ public class MASHSTEP {
     private String iNFUSEAMOUNT;
     @SerializedName("NAME")
     @Expose
-    private Object nAME;
+    private String nAME;
     @SerializedName("STEP_TEMP")
     @Expose
     private String sTEPTEMP;
@@ -33,11 +33,11 @@ public class MASHSTEP {
         this.iNFUSEAMOUNT = iNFUSEAMOUNT;
     }
 
-    public Object getNAME() {
+    public String getNAME() {
         return nAME;
     }
 
-    public void setNAME(Object nAME) {
+    public void setNAME(String nAME) {
         this.nAME = nAME;
     }
 
