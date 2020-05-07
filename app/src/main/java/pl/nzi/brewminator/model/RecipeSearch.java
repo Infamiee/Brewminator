@@ -39,4 +39,6 @@ public class RecipeSearch implements Comparable<RecipeSearch> {
     public int compareTo(RecipeSearch o) {
         return this.getName().compareTo(o.getName());
     }
+
+
 }
