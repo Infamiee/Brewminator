@@ -19,7 +19,7 @@ import java.util.Map;
 
 
 public class ApiConnector {
-    private static final String URL = "https://brewminator-api.herokuapp.com";
+    private static final String URL = "http://192.168.2.59:5000";
     private RequestQueue queue;
     public ApiConnector(Context context) {
         queue = Volley.newRequestQueue(context);

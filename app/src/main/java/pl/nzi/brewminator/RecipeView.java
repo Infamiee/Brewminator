@@ -189,6 +189,7 @@ public class RecipeView extends AppCompatActivity {
         commentButton.setOnClickListener(v -> {
             Intent intent = new Intent(this,FeedbackActivity.class);
             intent.putExtra("id",recipeId);
+            intent.putExtra("name",recipe.getNAME());
             startActivity(intent);
         });
         brewButton = findViewById(R.id.brew_button);

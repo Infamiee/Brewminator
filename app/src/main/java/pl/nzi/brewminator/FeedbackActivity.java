@@ -19,12 +19,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,13 +41,17 @@ import com.digidemic.unitof.G;
 import com.google.gson.Gson;
 
 import org.json.simple.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pl.nzi.brewminator.exception.NoCommentException;
 import pl.nzi.brewminator.model.Comment;
 import pl.nzi.brewminator.model.Comments;
 import pl.nzi.brewminator.model.Note;
@@ -62,33 +68,65 @@ public class FeedbackActivity extends AppCompatActivity {
     private AlertDialog alertDialog;
     boolean alreadyCommented;
     private ApiConnector connector;
-    List<String> names;
+    private List<String> names;
+    private float current_note;
 
 
+    float summedNote;
+
+
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.loading_layout);
+        setContentView(R.layout.activity_feedback);
         setupToolbar();
+        ImageButton addButton = findViewById(R.id.add_button);
+        addButton.setOnClickListener(v -> addCommentDialog(false));
         Intent intent = getIntent();
         recipeId = intent.getIntExtra("id", -1);
-        startLoadingAnim();
+        String recipeName = intent.getStringExtra("name");
         names = new ArrayList<>();
-        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = manager.getConnectionInfo();
-        macAddress = info.getMacAddress();
+        macAddress = getMacAddr();
         connector = new ApiConnector(this);
-        new LoadComments().execute(recipeId);
+        getComments();
+        setRecipeName(recipeName);
+
 
     }
 
-    private void startLoadingAnim() {
-        ImageView imageView = findViewById(R.id.loading);
-        imageView.setBackgroundResource(R.drawable.loading);
-        AnimationDrawable animationDrawable = (AnimationDrawable) imageView.getBackground();
-        animationDrawable.start();
+    private void setRecipeName(String name) {
+        TextView view = findViewById(R.id.name_textview);
+        view.setText(name);
 
     }
+    private String getMacAddr() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
+            }
+        } catch (Exception ex) {
+            //handle exception
+        }
+        return "";
+    }
+
 
 
     private void setupToolbar() {
@@ -106,72 +144,13 @@ public class FeedbackActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteComment(Comment comment) {
-
-        new DeleteComment(comment).execute();
-    }
-
-    private void editComment(Comment comment) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        dialogView = getLayoutInflater().inflate(R.layout.add_comment_dialog, null);
-        ImageView anim = dialogView.findViewById(R.id.anim);
-
-        anim.setBackgroundResource(R.drawable.loading);
-        loadingAnimation = (AnimationDrawable) anim.getBackground();
-        LinearLayout layout = dialogView.findViewById(R.id.name_layout);
-        layout.setVisibility(View.GONE);
-
-        EditText commentEditText = dialogView.findViewById(R.id.comment_edittext);
-
-        builder.setView(dialogView);
-        alertDialog = builder.create();
-        alertDialog.show();
-        ImageButton addButton = dialogView.findViewById(R.id.add_button);
-        addButton.setOnClickListener(v -> {
-            String commenttext = commentEditText.getText().toString();
-            if (commenttext.trim().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Couldn't be empty", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            new EditComment(comment).execute(commenttext);
-        });
-        ImageButton imageButton = dialogView.findViewById(R.id.close_button);
-        imageButton.setOnClickListener(v -> alertDialog.dismiss());
-
-    }
-
-    private void setupView() {
-        setContentView(R.layout.activity_feedback);
-        new GetNotes().execute();
-        setupToolbar();
-        ImageButton addButton = findViewById(R.id.add_button);
-        addButton.setOnClickListener(v -> addCommentDialog());
-    }
-
-    private void setRating(float rating) {
-
-        TextView r = findViewById(R.id.note_textview);
-        r.setText(String.format("%.1f",rating));
-        ImageView image = findViewById(R.id.cropped_finnish);
-        if (rating == 0) {
-            image.setImageResource(0);
-            return;
-        }
-        Bitmap btm = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.finish_load_150px);
-        int height = btm.getHeight();
-        int h = Math.round((float) height * rating / 10);
-        Log.d(TAG, "setRating: "+rating);
-        Bitmap newBitmap = Bitmap.createBitmap(btm, 0, height - h, btm.getWidth(), h, null, false);
 
 
-        image.setImageBitmap(newBitmap);
-    }
 
-    private void addCommentDialog() {
-        if (alreadyCommented) {
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void addCommentDialog(boolean isEdit) {
+        if (alreadyCommented && !isEdit) {
             Toast.makeText(this, "You already commented this recipe", Toast.LENGTH_LONG).show();
             return;
         }
@@ -179,39 +158,128 @@ public class FeedbackActivity extends AppCompatActivity {
 
         dialogView = getLayoutInflater().inflate(R.layout.add_comment_dialog, null);
         ImageView anim = dialogView.findViewById(R.id.anim);
-
         anim.setBackgroundResource(R.drawable.loading);
         loadingAnimation = (AnimationDrawable) anim.getBackground();
         EditText nameEditText = dialogView.findViewById(R.id.name_edittext);
+        if (isEdit) {
+            dialogView.findViewById(R.id.name_layout).setVisibility(View.GONE);
+        }
 
         EditText commentEditText = dialogView.findViewById(R.id.comment_edittext);
-        Spinner spinner = dialogView.findViewById(R.id.spinner);
+        RelativeLayout noteLayout = dialogView.findViewById(R.id.note_slider);
+        noteLayout.setOnTouchListener(touchHandler);
 
         builder.setView(dialogView);
         alertDialog = builder.create();
         alertDialog.show();
+        noteLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                noteLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                current_note=6f;
+                cutImage(noteLayout, (float) (noteLayout.getWidth() * 0.6));
+            }
+        });
+
         ImageButton addButton = dialogView.findViewById(R.id.add_button);
         addButton.setOnClickListener(v -> {
-            String name = nameEditText.getText().toString();
             String comment = commentEditText.getText().toString();
-            String selected = spinner.getSelectedItem().toString();
-            if (!selected.equals("----")) {
-                new SendNote().execute(Integer.parseInt(selected));
-            }
-            if (name.trim().isEmpty() || comment.trim().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Couldn't be empty", Toast.LENGTH_LONG).show();
+            if (comment.trim().isEmpty()) {
+                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (names.contains(name.trim())) {
-                Toast.makeText(this, "Someone else picked that name", Toast.LENGTH_LONG).show();
-                return;
+            if (!isEdit) {
+                String name = nameEditText.getText().toString();
+
+                if (name.trim().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Name", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (names.contains(name.trim())) {
+                    Toast.makeText(this, "Someone else picked that name", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                addComment(comment,name,current_note);
+
             }
-            new AddComment().execute(name, comment);
+            else {
+
+            }
+            setRecipeNote();
+            alertDialog.dismiss();
         });
         ImageButton imageButton = dialogView.findViewById(R.id.close_button);
         imageButton.setOnClickListener(v -> alertDialog.dismiss());
 
     }
+    @SuppressLint("ClickableViewAccessibility")
+    private void editCommentDialog(Comment comment){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        dialogView = getLayoutInflater().inflate(R.layout.add_comment_dialog, null);
+        ImageView anim = dialogView.findViewById(R.id.anim);
+        anim.setBackgroundResource(R.drawable.loading);
+        loadingAnimation = (AnimationDrawable) anim.getBackground();
+        dialogView.findViewById(R.id.name_layout).setVisibility(View.GONE);
+        EditText commentEditText = dialogView.findViewById(R.id.comment_edittext);
+        commentEditText.setText(comment.getComment());
+        RelativeLayout noteLayout = dialogView.findViewById(R.id.note_slider);
+        noteLayout.setOnTouchListener(touchHandler);
+        builder.setView(dialogView);
+        alertDialog = builder.create();
+        alertDialog.show();
+        noteLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                noteLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                current_note=comment.getNote().floatValue();
+                cutImage(noteLayout, (float) (noteLayout.getWidth() * current_note/10));
+            }
+        });
+
+        ImageButton addButton = dialogView.findViewById(R.id.add_button);
+        addButton.setOnClickListener(v -> {
+            String c= commentEditText.getText().toString();
+            if (c.trim().isEmpty()) {
+                Toast.makeText(this, "Comment cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            editComment(comment,current_note,c);
+            setRecipeNote();
+            alertDialog.dismiss();
+        });
+        ImageButton imageButton = dialogView.findViewById(R.id.close_button);
+        imageButton.setOnClickListener(v -> alertDialog.dismiss());
+    }
+
+
+    private void cutImage(RelativeLayout view, float x) {
+        float filteredX = x;
+        ImageView img = view.findViewById(R.id.note_img);
+        if (filteredX > view.getWidth()) {
+            filteredX = view.getWidth();
+        } else if (filteredX < 0.5) {
+            img.setVisibility(View.INVISIBLE);
+            filteredX = 0;
+            float n = (filteredX / view.getWidth()) * 10;
+            setNote(n);
+            return;
+        }
+        float n = (filteredX / view.getWidth()) * 10;
+        setNote(n);
+        current_note = n;
+        img.setVisibility(View.VISIBLE);
+        Log.d(TAG, "cutImage: " + filteredX);
+        Bitmap btm = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.note_gradient);
+        Bitmap newBitmap = Bitmap.createBitmap(btm, 0, 0, Math.round(filteredX), view.getHeight(), null, false);
+
+        img.setImageBitmap(newBitmap);
+
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -254,302 +322,201 @@ public class FeedbackActivity extends AppCompatActivity {
         return logoIcon;
     }
 
-    class LoadComments extends AsyncTask<Integer, Void, Void> {
 
-        @Override
-        protected Void doInBackground(Integer... integers) {
+    private void setupCommentView(Comment comment) {
+        LinearLayout layout = findViewById(R.id.comment_layout);
+        View child = getLayoutInflater().inflate(R.layout.comment_view, null);
+        Log.d(TAG, "setupCommentView: " + comment.getMacAddress());
+        if (macAddress.equals(comment.getMacAddress())) {
+            ImageButton edit = child.findViewById(R.id.edit_button);
+            edit.setVisibility(View.VISIBLE);
+            edit.setOnClickListener(v -> {
+                editCommentDialog(comment);
+            });
+            ImageButton delete = child.findViewById(R.id.delete_button);
+            delete.setVisibility(View.VISIBLE);
+            delete.setOnClickListener(v -> deleteComment(comment));
 
-            int id = integers[0];
+        }
+        TextView name = child.findViewById(R.id.name_textview);
+        name.setText(comment.getName());
+        Log.d(TAG, "setupCommentView: " + comment.getName());
+        TextView noteTextView = child.findViewById(R.id.note_textview);
+        noteTextView.setText(String.format("%.1f", comment.getNote()));
+        TextView commentView = child.findViewById(R.id.comment_textview);
+        commentView.setText(comment.getComment());
+        comment.setView(child);
+        layout.addView(child);
+    }
 
 
-            connector.get("/comment/" + String.valueOf(recipeId), null, Request.Method.GET, response -> {
-                setupView();
+    @SuppressLint("ClickableViewAccessibility")
+    private View.OnTouchListener touchHandler = (v, event) -> {
+        float x = event.getX();
+        float y = event.getY();
+        Log.d(TAG, "onTouch: " + x + "    " + y);
+        cutImage((RelativeLayout) v, x);
 
+        return true;
+    };
+
+    private void setRecipeNote(){
+        TextView noteView = findViewById(R.id.note_textview);
+        try {
+            float n = calculateSummedNote();
+            noteView.setText(String.format("%.1f",n));
+            setNoteImage();
+        }catch (NoCommentException e){
+            ImageView img = findViewById(R.id.cropped_finnish);
+            img.setVisibility(View.INVISIBLE);
+            noteView.setText("not rated");
+        }
+
+
+    }
+
+    private void setNoteImage() {
+        float percent = summedNote / 10;
+        ImageView img = findViewById(R.id.cropped_finnish);
+        if (summedNote==0) {
+            img.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        Bitmap btm = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.finish_load_150px);
+        Log.d(TAG, "setNoteImage: " + summedNote);
+        Bitmap newBitmap = Bitmap.createBitmap(btm, 0, Math.round((btm.getHeight() * (1 - percent))), btm.getWidth(), Math.round(btm.getHeight() * percent), null, false);
+        img.setVisibility(View.VISIBLE);
+        img.setImageBitmap(newBitmap);
+    }
+    private float calculateSummedNote() throws NoCommentException {
+        if (comments.getComments().size()==0){
+            throw new NoCommentException("no notes");
+        }
+        float note = 0;
+        for (Comment comment:comments.getComments()
+             ) {
+            note+=comment.getNote();
+        }
+        summedNote = note/comments.getComments().size();
+        return note/comments.getComments().size();
+
+    }
+
+    private void setNote(float n) {
+        TextView note = alertDialog.findViewById(R.id.note_num);
+        float rounded = (float) (Math.round(n * 10.0) / 10.0);
+        note.setText(String.format("%.1f", rounded));
+    }
+
+    private void getComments() {
+        new Thread(() -> {
+            connector.get("/comment/" + recipeId, null, Request.Method.GET, response ->
+            {
                 Gson gson = new Gson();
-                try {
-                    comments = gson.fromJson(response, Comments.class);
-                    List<Comment> commentList = comments.getComments();
-                    for (Comment comment : commentList) {
-                        if (comment.getMacAddress().equals(macAddress)) {
-                            alreadyCommented = true;
-                        }
-                        names.add(comment.getName().trim());
-                        setupCommentView(comment);
-                    }
-
-                } catch (Exception e) {
-                    Log.d(TAG, "doInBackground: " + e.getMessage());
+                comments = gson.fromJson(response, Comments.class);
+                float sumNote = 0;
+                for (Comment comment : comments.getComments()) {
+                    setupCommentView(comment);
+                    sumNote += comment.getNote();
                 }
-            }, error -> {
-                Log.d(TAG, "doInBackground: error " + error.getMessage());
-            });
+                float finalSumNote = sumNote;
 
-            return null;
-        }
-
-        private void setupCommentView(Comment comment) {
-            LinearLayout layout = findViewById(R.id.comment_layout);
-            View child = getLayoutInflater().inflate(R.layout.comment_view, null);
-            if (macAddress.equals(comment.getMacAddress())) {
-                ImageButton edit = child.findViewById(R.id.edit_button);
-                edit.setVisibility(View.VISIBLE);
-                edit.setOnClickListener(v -> {
-                    editComment(comment);
-                });
-                ImageButton delete = child.findViewById(R.id.delete_button);
-                delete.setVisibility(View.VISIBLE);
-                delete.setOnClickListener(v -> deleteComment(comment));
-            }
-            TextView name = child.findViewById(R.id.name_textview);
-            name.setText(comment.getName());
-            Log.d(TAG, "setupCommentView: " + comment.getName());
-            TextView commentView = child.findViewById(R.id.comment_textview);
-            commentView.setText(comment.getComment());
-            comment.setView(child);
-            layout.addView(child);
-        }
-    }
-
-    class GetNotes extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... floats) {
-            connector.get("/note/" + recipeId, null, Request.Method.GET, response ->
-                    {
-
-
-                        Gson gson = new Gson();
-                        Note note = gson.fromJson(response, Note.class);
-                        Log.d(TAG, "doInBackground: "+note.getNote());
-                        setRating(note.getNote());
-                    },
-
-                    error -> {
-                        Toast.makeText(FeedbackActivity.this, "Couldn't load note", Toast.LENGTH_LONG).show();
-                    });
-            return null;
-        }
-
-    }
-
-    class SendNote extends AsyncTask<Integer, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            int note = integers[0];
-            JSONObject body = new JSONObject();
-            body.put("note", note);
-            body.put("mac", macAddress);
-            body.put("recipe_id", recipeId);
-            connector.get("/note", body, Request.Method.POST, response ->
-                    {
-                        new GetNotes().execute();
-                    },
-
-                    error -> {
-                        Toast.makeText(FeedbackActivity.this, "Couldn't send note", Toast.LENGTH_LONG).show();
-                    });
-            return null;
-        }
-
-    }
-
-    class AddComment extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-
-
-            runOnUiThread(() ->
-            {
-                ImageView anim = dialogView.findViewById(R.id.anim);
-                anim.setVisibility(View.VISIBLE);
-                loadingAnimation.start();
-            });
-
-            String name = strings[0];
-            String comment = strings[1];
-            JSONObject bodyObj = new JSONObject();
-            Log.d(TAG, "doInBackground:");
-            bodyObj.put("name", name);
-            bodyObj.put("comment", comment);
-            bodyObj.put("recipe_id", recipeId);
-            bodyObj.put("mac", macAddress);
-
-
-            connector.get("/comment", bodyObj, Request.Method.POST, response -> {
                 runOnUiThread(() ->
                 {
-                    ImageView anim = dialogView.findViewById(R.id.anim);
-                    loadingAnimation.stop();
-                    anim.setVisibility(View.INVISIBLE);
-                    alertDialog.dismiss();
-                    LinearLayout layout = findViewById(R.id.comment_layout);
-                    layout.removeAllViews();
-                    new LoadComments().execute(recipeId);
-                });
 
-
-            }, error -> {
-
-
-                Toast.makeText(FeedbackActivity.this, "Couldn't add comment", Toast.LENGTH_LONG).show();
-            });
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            runOnUiThread(() ->
-            {
-                ImageView anim = dialogView.findViewById(R.id.anim);
-                loadingAnimation.stop();
-                anim.setVisibility(View.INVISIBLE);
-                alertDialog.dismiss();
-            });
-        }
-    }
-
-    class DeleteComment extends AsyncTask<Void, Void, Void> {
-        private Comment comment;
-
-
-        public DeleteComment(Comment comment) {
-            this.comment = comment;
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            JSONObject bodyObj = new JSONObject();
-            Log.d(TAG, "doInBackground:" + comment.getId() + "   " + macAddress);
-            bodyObj.put("comment_id", comment.getId());
-            bodyObj.put("mac", macAddress);
-
-
-            connector.get("/comment", bodyObj, Request.Method.PATCH, response -> {
-                LinearLayout layout = findViewById(R.id.comment_layout);
-                layout.removeView(comment.getView());
-                Toast.makeText(FeedbackActivity.this, "Deleted", Toast.LENGTH_LONG).show();
-                alreadyCommented = false;
-                new DeleteNote().execute();
-            }, error -> {
-
-
-                Toast.makeText(FeedbackActivity.this, "Couldn't delete comment", Toast.LENGTH_LONG).show();
-            });
-            return null;
-        }
-
-
-    }
-
-    class DeleteNote extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            JSONObject body = new JSONObject();
-            body.put("recipe_id", recipeId);
-            body.put("mac", macAddress);
-            connector.get("/note", body, Request.Method.PATCH, response -> {
-                        setRating(getNote(response).getNote());
-                    },
-                    error -> {
-                        Toast.makeText(FeedbackActivity.this, "Couldn't delete note", Toast.LENGTH_LONG).show();
-                    });
-            return null;
-        }
-    }
-
-    class EditComment extends AsyncTask<String, Void, Void> {
-        private Comment comment;
-
-
-        public EditComment(Comment comment) {
-            this.comment = comment;
-
-        }
-
-        @Override
-        protected Void doInBackground(String... strings) {
-
-            runOnUiThread(() ->
-            {
-                ImageView anim = dialogView.findViewById(R.id.anim);
-                anim.setVisibility(View.VISIBLE);
-                loadingAnimation.start();
-            });
-
-            String commenttext = strings[0];
-            JSONObject bodyObj = new JSONObject();
-            Log.d(TAG, "doInBackground:" + comment.getId() + "   " + macAddress);
-            bodyObj.put("comment", commenttext);
-            bodyObj.put("comment_id", comment.getId());
-            bodyObj.put("mac", macAddress);
-
-            connector.get("/comment/edit", bodyObj, Request.Method.PATCH, response -> {
-                runOnUiThread(() ->
-                {
-                    ImageView anim = dialogView.findViewById(R.id.anim);
-                    loadingAnimation.stop();
-                    anim.setVisibility(View.INVISIBLE);
-
-                    Spinner spinner = alertDialog.findViewById(R.id.spinner);
-                    String note = spinner.getSelectedItem().toString();
-                    if (!note.equals("----")) {
-                        new EditNote().execute(Integer.parseInt(note));
-
+                    TextView view = findViewById(R.id.note_textview);
+                    summedNote=0;
+                    if (finalSumNote!=0){
+                        summedNote = finalSumNote / comments.getComments().size();
                     }
-                    alertDialog.dismiss();
-                    TextView view = this.comment.getView().findViewById(R.id.comment_textview);
-                    view.setText(commenttext);
+                    view.setText(String.format("%.1f", summedNote));
+                    if (comments.getComments().size()==0){
+                        view.setText("not rated");
+                        return;
+                    }
 
+                    setNoteImage();
 
                 });
+            }, error -> {
+                Toast.makeText(this, "Couldnt load comments", Toast.LENGTH_LONG).show();
+            });
+        }).start();
+    }
+    private void addComment(String comment,String name,float note){
+        new Thread(() -> {
+            JSONObject body = new JSONObject();
+            body.put("mac",macAddress);
+            body.put("comment",comment);
+            body.put("name",name);
+            body.put("note",note);
+            body.put("recipe_id",recipeId);
+            connector.get("/comment", body, Request.Method.POST, response ->
+            {
+                Comment c = new Comment();
+                c.setComment(comment);
+                c.setMacAddress(macAddress);
+                c.setName(name);
+                c.setNote((double) note);
+                c.setRecipeId(recipeId);
+                setupCommentView(c);
+                List<Comment> commentList = comments.getComments();
+                commentList.add(c);
+                comments.setComments(commentList);
+                setRecipeNote();
 
             }, error -> {
-                runOnUiThread(() ->
-                {
-                    ImageView anim = dialogView.findViewById(R.id.anim);
-                    loadingAnimation.stop();
-                    anim.setVisibility(View.INVISIBLE);
-                });
-
-                Toast.makeText(FeedbackActivity.this, "Couldn't edit comment", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Couldnt load comments", Toast.LENGTH_LONG).show();
             });
-
-
-            return null;
-        }
-
+        }).start();
     }
 
-    class EditNote extends AsyncTask<Integer, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            int note = integers[0];
+    private void deleteComment(Comment comment) {
+        new Thread(() -> {
             JSONObject body = new JSONObject();
-            body.put("recipe_id", recipeId);
-            body.put("mac", macAddress);
-            body.put("note", note);
-            connector.get("/note", body, Request.Method.PUT, response -> {
-                setRating(getNote(response).getNote());
-            }, error ->
-                    Toast.makeText(FeedbackActivity.this, "Couldn't edit note", Toast.LENGTH_LONG).show());
-            return null;
-        }
-
+            body.put("recipe_id",recipeId);
+            body.put("mac",macAddress);
+            connector.get("/comment", body, Request.Method.PATCH, response ->
+            {
+                runOnUiThread(() -> {
+                    LinearLayout layout = findViewById(R.id.comment_layout);
+                    layout.removeView(comment.getView());
+                    List<Comment> commentList = comments.getComments();
+                    commentList.remove(comment);
+                    comments.setComments(commentList);
+                    setRecipeNote();
+                });
+            }, error -> {
+                Toast.makeText(this, "Couldnt delete comment", Toast.LENGTH_LONG).show();
+            });
+        }).start();
     }
 
-    private Note getNote(String response){
-        Gson gson = new Gson();
-        Note note = gson.fromJson(response,Note.class);
-        return note;
+    private void editComment(Comment comment,float note,String newComm){
+        //TODO
+        new Thread(()->{
+            JSONObject body = new JSONObject();
+            body.put("mac",macAddress);
+            body.put("comment",newComm);
+            body.put("note",note);
+            connector.get("/comment/edit",body,Request.Method.PATCH,response ->
+            {
+                int idx = comments.getComments().indexOf(comment);
+                Comment edited= comments.getComments().get(idx);
+                edited.setNote((double) note);
+                edited.setComment(newComm);
+                comments.getComments().set(idx,edited);
+                TextView commentView = comment.getView().findViewById(R.id.comment_textview);
+                commentView.setText(comment.getComment());
+                TextView noteView = comment.getView().findViewById(R.id.note_textview);
+                noteView.setText(String.format("%.1f",comment.getNote()));
+
+
+                setRecipeNote();
+            },error -> {Toast.makeText(FeedbackActivity.this,"couldn'edit comment",Toast.LENGTH_LONG).show();});
+        }).start();
     }
 
 

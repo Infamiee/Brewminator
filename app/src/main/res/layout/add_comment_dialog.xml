@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="320dp"
+    android:layout_width="350dp"
+    android:layout_height="440dp"
     android:layout_marginTop="@dimen/activity_vertical_margin">
+
 
     <ImageButton
         android:id="@+id/close_button"
@@ -47,13 +48,21 @@
 
                 />
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/note_0_layout"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/note_layout" />
+
         <LinearLayout
+            android:id="@+id/note_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/note_layout"
             android:layout_below="@id/name_layout"
-            android:layout_marginTop="@dimen/activity_horizontal_margin">
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,25 +70,45 @@
                 android:text="Note"
                 android:textColor="@color/black"
                 android:textSize="17sp"
-                android:textStyle="bold"
+                android:textStyle="bold" />
 
-                />
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_marginTop="5dp"
-                android:layout_width="150dp"
-                android:gravity="center"
-                android:layout_gravity="center"
+            <TextView
+                android:id="@+id/note_num"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/noteArray"
-                />
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="not rated"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/note_slider"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp">
+
+
+                <ImageView
+                    android:id="@+id/note_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:src="@drawable/note_gradient" />
+
+            </RelativeLayout>
+
+
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/comment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/comment_layout"
             android:layout_below="@id/note_layout"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,30 +123,29 @@
                 android:id="@+id/comment_edittext"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:maxLength="250"
                 android:layout_gravity="center"
-                android:gravity="top"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/comment_border"
+                android:gravity="top"
+                android:maxLength="250"
                 android:minHeight="100dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_below="@id/comment_layout"
             android:layout_centerHorizontal="true"
-            >
+            android:orientation="horizontal">
+
             <ImageButton
                 android:id="@+id/add_button"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
+                android:layout_marginStart="75dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/add_comment_button"
-                android:layout_marginStart="75dp"
-                 />
+                android:src="@drawable/add_comment_button" />
 
             <ImageView
                 android:id="@+id/anim"
@@ -125,13 +153,11 @@
                 android:layout_height="75dp"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:visibility="invisible"
-                />
+                android:visibility="invisible" />
         </LinearLayout>
 
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

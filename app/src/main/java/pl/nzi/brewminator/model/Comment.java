@@ -20,11 +20,14 @@ public class Comment {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("note")
+    @Expose
+    private Double note;
     @SerializedName("recipe_id")
     @Expose
     private Integer recipeId;
 
-    private View view;
+    View view;
 
     public View getView() {
         return view;
@@ -64,6 +67,14 @@ public class Comment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getNote() {
+        return note;
+    }
+
+    public void setNote(Double note) {
+        this.note = note;
     }
 
     public Integer getRecipeId() {
